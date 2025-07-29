@@ -5,12 +5,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuthContext } from './modules/auth/context/AuthContext';
 import { ProtectedRoute } from './modules/auth/components/ProtectedRoute';
 import { useTokenRefresh } from './modules/auth/hooks/useTokenRefresh';
+import { AppHeaderLayout } from './layout/AppHeaderLayout';
 import Login from './modules/auth/pages/Login';
 import SignUp from './modules/auth/pages/SignUp';
 import ForgotPassword from './modules/auth/pages/ForgotPassword';
 import Unauthorized from './modules/auth/pages/Unauthorized';
 import Dashboard from './modules/dashboard/pages/dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -49,10 +52,12 @@ const AppContent = () => {
           path="/dashboard" 
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AppHeaderLayout />
             </ProtectedRoute>
           } 
-        />
+        >
+          <Route index element={<Dashboard />} />
+        </Route>
         
         {/* Rota 404 */}
         <Route path="*" element={<Login />} />

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../context/AuthContext';
-import { useNotification } from '../hooks/useNotification';
+import { useAuthContext } from '../../../modules/auth/context/AuthContext';
+import { useNotification } from '../../../modules/auth/hooks/useNotification';
 
 interface LogoutButtonProps {
   className?: string;
