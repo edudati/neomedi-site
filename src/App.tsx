@@ -3,9 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuthContext } from './modules/auth/context/AuthContext';
+import { ProtectedRoute } from './modules/auth/components/ProtectedRoute';
+import { useTokenRefresh } from './modules/auth/hooks/useTokenRefresh';
 import Login from './modules/auth/pages/Login';
 import SignUp from './modules/auth/pages/SignUp';
 import ForgotPassword from './modules/auth/pages/ForgotPassword';
+import Unauthorized from './modules/auth/pages/Unauthorized';
+import Dashboard from './modules/dashboard/pages/dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -22,6 +26,9 @@ const queryClient = new QueryClient({
 
 const AppContent = () => {
   const { initializeAuth } = useAuthContext();
+  
+  // Inicializar autenticação e refresh automático
+  useTokenRefresh();
 
   useEffect(() => {
     initializeAuth();
@@ -30,11 +37,25 @@ const AppContent = () => {
   return (
     <div className="App">
       <Routes>
+        {/* Rotas públicas */}
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/dashboard" element={<div>Dashboard (to be implemented)</div>} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        
+        {/* Rotas protegidas */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Rota 404 */}
+        <Route path="*" element={<Login />} />
       </Routes>
       <ToastContainer />
     </div>

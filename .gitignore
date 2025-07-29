@@ -187,3 +187,4 @@ storybook-static/
 # .vercel
 # .netlify
 # .serverless/
+/docs

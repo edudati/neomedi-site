@@ -58,6 +58,7 @@ export interface AuthResult {
 export interface AuthResponse {
   success: boolean;
   message: string;
+  is_new_user?: boolean;
   access_token?: string;
   refresh_token?: string;
   user?: AuthUser;
