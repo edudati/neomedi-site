@@ -16,59 +16,63 @@ export const AuthLayout = ({
   isForgotPasswordPage = false,
 }: AuthLayoutProps) => {
   return (
-    <div className="min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="w-100 d-flex justify-content-center px-3">
-        <div
-          className="p-4 w-100 bg-white rounded shadow-lg"
-          style={{ maxWidth: '480px' }}
-        >
-          <div className="text-center mb-4">
-            <Link
-              to="#"
-              className="d-flex justify-content-center align-items-center mb-3"
-            >
-              <img
-                src={logo}
-                alt="Logo"
-                style={{ height: '48px' }}
-                className="me-2"
-              />
-              <img
-                src={logotext}
-                alt="Texto Logo"
-                style={{ height: '20px' }}
-              />
-            </Link>
-            <h4 className="mb-1">{title}</h4>
-          </div>
+    <div className="min-vh-100 d-flex align-items-center">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12" style={{ maxWidth: '1800px', margin: '0 auto', padding: '0 24px' }}>
+            <div className="bg-white rounded shadow-sm p-4">
+              <div className="text-center mb-4">
+                <Link
+                  to="#"
+                  className="d-inline-block mb-3"
+                  aria-label="Neomedi Logo"
+                >
+                  <img
+                    src={logo}
+                    alt="Logo Neomedi"
+                    className="img-fluid"
+                    width="38"
+                    height="38"
+                  />
+                  <img
+                    src={logotext}
+                    alt="Neomedi"
+                    className="img-fluid ms-2"
+                    width="85"
+                    height="17"
+                  />
+                </Link>
+                <h1 className="h5 fw-normal text-secondary mb-0">{title}</h1>
+              </div>
 
-          {children}
+              {children}
 
-          <div className="text-center mt-3">
-            <p className="mb-0" style={{ color: '#6c757d' }}>
-              {isLoginPage ? (
-                <>
-                  Não tem uma conta?{' '}
-                  <Link className="text-primary fw-semibold" to="/signup">
-                    Cadastre-se
-                  </Link>
-                </>
-              ) : isForgotPasswordPage ? (
-                <>
-                  Lembrou sua senha?{' '}
-                  <Link className="text-primary fw-semibold" to="/login">
-                    Voltar ao login
-                  </Link>
-                </>
-              ) : (
-                <>
-                  Já tem uma conta?{' '}
-                  <Link className="text-primary fw-semibold" to="/login">
-                    Entrar
-                  </Link>
-                </>
-              )}
-            </p>
+              <div className="text-center mt-4">
+                <p className="text-muted small mb-0">
+                  {isLoginPage ? (
+                    <>
+                      Não tem uma conta?{' '}
+                      <Link className="link-primary text-decoration-none" to="/signup">
+                        Cadastre-se
+                      </Link>
+                    </>
+                  ) : isForgotPasswordPage ? (
+                    <>
+                      <Link className="link-primary text-decoration-none" to="/login">
+                        Voltar ao login
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      Já tem uma conta?{' '}
+                      <Link className="link-primary text-decoration-none" to="/login">
+                        Entrar
+                      </Link>
+                    </>
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

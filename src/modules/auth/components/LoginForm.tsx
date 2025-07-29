@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import type { LoginFormData } from '../schemas/authSchemas';
-import { getFieldError, getFieldClassName } from '../lib/formUtils';
+import { getFieldError } from '../lib/formUtils';
 
 export const LoginForm = () => {
   const {
@@ -10,78 +10,76 @@ export const LoginForm = () => {
   } = useFormContext<LoginFormData>();
 
   return (
-    <>
-      <div className="form-group">
-        <label className="mb-2 text-start d-block">
-          <strong>Email</strong>
+    <div style={{ minWidth: '400px', fontSize: '16px' }}>
+      <div className="mb-4">
+        <label htmlFor="email" className="form-label text-secondary text-start w-100">
+          Email
         </label>
         <input
           type="email"
-          className={getFieldClassName(errors.email)}
+          id="email"
+          className={`form-control form-control-lg ${errors.email ? 'is-invalid' : ''}`}
+          placeholder="Digite seu email"
+          aria-describedby={errors.email ? 'email-error' : undefined}
           {...register('email')}
+          style={{ fontSize: 'inherit' }}
         />
         {errors.email && (
-          <div className="text-danger fs-12">{getFieldError(errors.email)}</div>
+          <div id="email-error" className="invalid-feedback">
+            {getFieldError(errors.email)}
+          </div>
         )}
       </div>
 
-      <div className="form-group">
-        <label className="mb-2 text-start d-block">
-          <strong>Senha</strong>
+      <div className="mb-4">
+        <label htmlFor="password" className="form-label text-secondary text-start w-100">
+          Senha
         </label>
         <input
           type="password"
-          className={getFieldClassName(errors.password)}
+          id="password"
+          className={`form-control form-control-lg ${errors.password ? 'is-invalid' : ''}`}
+          placeholder="Digite sua senha"
+          aria-describedby={errors.password ? 'password-error' : undefined}
           {...register('password')}
+          style={{ fontSize: 'inherit' }}
         />
         {errors.password && (
-          <div className="text-danger fs-12">{getFieldError(errors.password)}</div>
+          <div id="password-error" className="invalid-feedback">
+            {getFieldError(errors.password)}
+          </div>
         )}
       </div>
 
-      <div className="form-row d-flex justify-content-between mt-4 mb-2">
-        <div className="form-group">
-          <div className="custom-control custom-checkbox ms-1">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="basic_checkbox_1"
-              {...register('rememberMe')}
-            />
-            <label className="form-check-label" htmlFor="basic_checkbox_1">
-              Lembrar de mim
-            </label>
-          </div>
-        </div>
-        <div className="form-group">
-          <Link to="/forgot-password" className="text-primary text-decoration-none fs-12">
-            Esqueci a senha
-          </Link>
-        </div>
-      </div>
-
-      <div className="text-center">
+      <div className="d-grid mb-3">
         <button 
           type="submit" 
-          className="btn w-100 py-2"
-          style={{ 
-            backgroundColor: '#4CAF93', 
-            borderColor: '#4CAF93', 
-            color: 'white',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#3d8b7a';
-            e.currentTarget.style.borderColor = '#3d8b7a';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#4CAF93';
-            e.currentTarget.style.borderColor = '#4CAF93';
-          }}
+          className="btn btn-primary btn-lg py-2"
+          aria-label="Entrar no sistema"
         >
           Entrar
         </button>
       </div>
-    </>
+
+      <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-center gap-3 gap-md-0">
+        <div className="form-check order-1 order-md-0">
+          <input
+            type="checkbox"
+            id="rememberMe"
+            className="form-check-input"
+            {...register('rememberMe')}
+          />
+          <label className="form-check-label text-secondary" htmlFor="rememberMe">
+            Lembrar de mim
+          </label>
+        </div>
+        <Link 
+          to="/forgot-password" 
+          className="link-primary text-decoration-none order-0 order-md-1"
+        >
+          Esqueci a senha
+        </Link>
+      </div>
+    </div>
   );
-}; 
+};
