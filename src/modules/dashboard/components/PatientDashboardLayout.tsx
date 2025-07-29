@@ -1,17 +1,17 @@
 import React from 'react';
-import AdminDashboardHeader from './AdminDashboardHeader';
+import PatientDashboardHeader from './PatientDashboardHeader';
 import SideBar from './SideBar';
 import DashboardArea from './DashboardArea';
 import AppFooter from './AppFooter';
 
-interface DashboardLayoutProps {
+interface PatientDashboardLayoutProps {
   headerContent?: React.ReactNode;
   sidebarContent?: React.ReactNode;
   dashboardContent?: React.ReactNode;
   footerContent?: React.ReactNode;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+const PatientDashboardLayout: React.FC<PatientDashboardLayoutProps> = ({
   headerContent,
   sidebarContent,
   dashboardContent,
@@ -38,16 +38,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           style={{ 
             marginLeft: '16rem', // Espaço para o SideBar
             width: 'calc(100% - 16rem)',
-            paddingTop: '4rem' // Espaço para o AdminDashboardHeader fixo
+            paddingTop: '4rem' // Espaço para o PatientDashboardHeader fixo
           }}
         >
-          {/* AdminDashboardHeader - fixo logo abaixo do AppHeader */}
-          <AdminDashboardHeader>
+          {/* PatientDashboardHeader - fixo logo abaixo do AppHeader */}
+          <PatientDashboardHeader>
             {headerContent}
-          </AdminDashboardHeader>
+          </PatientDashboardHeader>
 
           {/* DashboardArea - ocupa o espaço restante */}
-          <DashboardArea backgroundColor="#E8F0FE">
+          <DashboardArea backgroundColor="#FFF4EC">
             {dashboardContent}
           </DashboardArea>
         </div>
@@ -61,4 +61,4 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   );
 };
 
-export default DashboardLayout;
+export default PatientDashboardLayout;

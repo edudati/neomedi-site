@@ -1,25 +1,25 @@
 import React from 'react';
-import { ProfessionalDashboardLayout } from '../components';
+import { SupportDashboardLayout } from '../components';
 
-const ProfessionalDashboard: React.FC = () => {
-  // Conteúdo do header específico do profissional
+const SupportDashboard: React.FC = () => {
+  // Conteúdo do header específico do suporte
   const headerContent = (
     <div className="d-flex align-items-center justify-content-between w-100">
-      <h1 className="h5 mb-0">Painel Profissional</h1>
+      <h1 className="h5 mb-0">Painel de Suporte</h1>
       <div className="d-flex align-items-center gap-2">
-        <button className="btn btn-outline-success btn-sm">
-          <i className="bi bi-plus-circle me-1"></i>
-          Nova Consulta
+        <button className="btn btn-outline-warning btn-sm">
+          <i className="bi bi-headset me-1"></i>
+          Atender
         </button>
       </div>
     </div>
   );
 
-  // Conteúdo da sidebar para profissionais
+  // Conteúdo da sidebar para suporte
   const sidebarContent = (
     <div className="d-flex flex-column h-100">
       <div className="mb-4">
-        <h6 className="text-muted text-uppercase small mb-3">Menu Profissional</h6>
+        <h6 className="text-muted text-uppercase small mb-3">Menu de Suporte</h6>
         <ul className="nav nav-pills flex-column">
           <li className="nav-item">
             <a className="nav-link active" href="#dashboard">
@@ -28,33 +28,27 @@ const ProfessionalDashboard: React.FC = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#agenda">
-              <i className="bi bi-calendar-week me-2"></i>
-              Minha Agenda
+            <a className="nav-link" href="#tickets">
+              <i className="bi bi-ticket-detailed me-2"></i>
+              Tickets
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#pacientes">
+            <a className="nav-link" href="#chamados">
+              <i className="bi bi-telephone me-2"></i>
+              Chamados
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#usuarios">
               <i className="bi bi-people me-2"></i>
-              Meus Pacientes
+              Usuários
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#prontuarios">
-              <i className="bi bi-file-earmark-text me-2"></i>
-              Prontuários
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#exames">
-              <i className="bi bi-clipboard2-pulse me-2"></i>
-              Exames
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#prescricoes">
-              <i className="bi bi-prescription me-2"></i>
-              Prescrições
+            <a className="nav-link" href="#sistema">
+              <i className="bi bi-gear me-2"></i>
+              Sistema
             </a>
           </li>
           <li className="nav-item">
@@ -63,21 +57,37 @@ const ProfessionalDashboard: React.FC = () => {
               Relatórios
             </a>
           </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#base-conhecimento">
+              <i className="bi bi-book me-2"></i>
+              Base de Conhecimento
+            </a>
+          </li>
         </ul>
       </div>
     </div>
   );
 
-  // Conteúdo do dashboard para profissionais
+  // Conteúdo do dashboard para suporte
   const dashboardContent = (
     <div className="container-fluid">
       <div className="row g-4">
         <div className="col-md-6 col-lg-3">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Consultas Hoje</h5>
+              <h5 className="card-title">Tickets Abertos</h5>
+              <p className="card-text display-6">12</p>
+              <small className="text-muted">Pendentes</small>
+            </div>
+          </div>
+        </div>
+        
+        <div className="col-md-6 col-lg-3">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Chamados Hoje</h5>
               <p className="card-text display-6">8</p>
-              <small className="text-muted">Agendadas</small>
+              <small className="text-muted">Atendidos</small>
             </div>
           </div>
         </div>
@@ -85,9 +95,9 @@ const ProfessionalDashboard: React.FC = () => {
         <div className="col-md-6 col-lg-3">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Pacientes Atendidos</h5>
-              <p className="card-text display-6">156</p>
-              <small className="text-muted">Este mês</small>
+              <h5 className="card-title">Tempo Médio</h5>
+              <p className="card-text display-6">15min</p>
+              <small className="text-muted">Resolução</small>
             </div>
           </div>
         </div>
@@ -95,19 +105,9 @@ const ProfessionalDashboard: React.FC = () => {
         <div className="col-md-6 col-lg-3">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Próxima Consulta</h5>
-              <p className="card-text display-6">14:30</p>
-              <small className="text-muted">Maria Silva</small>
-            </div>
-          </div>
-        </div>
-        
-        <div className="col-md-6 col-lg-3">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Exames Pendentes</h5>
-              <p className="card-text display-6">23</p>
-              <small className="text-muted">Para avaliar</small>
+              <h5 className="card-title">Satisfação</h5>
+              <p className="card-text display-6">4.8</p>
+              <small className="text-muted">/ 5.0</small>
             </div>
           </div>
         </div>
@@ -123,7 +123,7 @@ const ProfessionalDashboard: React.FC = () => {
   );
 
   return (
-    <ProfessionalDashboardLayout
+    <SupportDashboardLayout
       headerContent={headerContent}
       sidebarContent={sidebarContent}
       dashboardContent={dashboardContent}
@@ -132,5 +132,4 @@ const ProfessionalDashboard: React.FC = () => {
   );
 };
 
-export default ProfessionalDashboard;
-
+export default SupportDashboard;

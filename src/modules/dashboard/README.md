@@ -10,17 +10,23 @@ dashboard/
 │   ├── AppHeader.tsx     # Header principal (4rem altura, 100% largura, FIXO)
 │   ├── DashboardHeader.tsx # Header do dashboard (4rem altura, 100% largura)
 │   ├── AdminDashboardHeader.tsx # Header específico para admin (4rem altura, FIXO)
+│   ├── PatientDashboardHeader.tsx # Header específico para paciente (4rem altura, FIXO)
+│   ├── ProfessionalDashboardHeader.tsx # Header específico para profissional (4rem altura, FIXO)
+│   ├── SupportDashboardHeader.tsx # Header específico para suporte (4rem altura, FIXO)
 │   ├── SideBar.tsx       # Sidebar lateral (16rem largura, altura dinâmica)
 │   ├── DashboardArea.tsx # Área principal do conteúdo (flex: 1)
 │   ├── AppFooter.tsx     # Footer (4rem altura, 100% largura)
 │   ├── DashboardLayout.tsx # Layout principal que organiza todos os componentes
+│   ├── PatientDashboardLayout.tsx # Layout específico para pacientes
+│   ├── ProfessionalDashboardLayout.tsx # Layout específico para profissionais
+│   ├── SupportDashboardLayout.tsx # Layout específico para suporte
 │   └── index.ts          # Exportações dos componentes
 ├── views/                # Dashboards específicos por role
 │   ├── adminDashboard.tsx # Dashboard para administradores (NOVO LAYOUT)
+│   ├── patientDashboard.tsx # Dashboard para pacientes (NOVO LAYOUT)
+│   ├── professionalDashboard.tsx # Dashboard para profissionais da saúde (NOVO LAYOUT)
+│   ├── supportDashboard.tsx # Dashboard para suporte (NOVO LAYOUT)
 │   ├── managerDashboard.tsx # Dashboard para gerentes (LAYOUT ANTIGO)
-│   ├── professionalDashboard.tsx # Dashboard para profissionais (LAYOUT ANTIGO)
-│   ├── assistantDashboard.tsx # Dashboard para assistentes (LAYOUT ANTIGO)
-│   ├── clientDashboard.tsx # Dashboard para clientes (LAYOUT ANTIGO)
 │   └── superDashboard.tsx # Dashboard para super admins (LAYOUT ANTIGO)
 ├── pages/                # Páginas do dashboard
 │   └── dashboard.tsx     # Página principal que renderiza o dashboard apropriado
@@ -38,27 +44,59 @@ O sistema funciona da seguinte forma:
 - **AppHeader**: Header principal fixo no topo (4rem altura, 100% largura)
 - **AdminDashboardHeader**: Header específico fixo logo abaixo do AppHeader (cinza claro)
 - **SideBar**: Menu lateral (16rem largura, cinza claro) - limitador do submenu
-- **DashboardArea**: Área principal do conteúdo (flex: 1) - rola independentemente
+- **DashboardArea**: Área principal do conteúdo (flex: 1) - rola independentemente - **Azul claro pastel (#E8F0FE)**
+- **AppFooter**: Footer fixo na parte inferior
+- Layout responsivo com flexbox
+
+### 👤 **Paciente (Client)** (Novo Layout)
+- **AppHeader**: Header principal fixo no topo (4rem altura, 100% largura)
+- **PatientDashboardHeader**: Header específico fixo logo abaixo do AppHeader (cinza claro)
+- **SideBar**: Menu lateral (16rem largura, cinza claro) - limitador do submenu
+- **DashboardArea**: Área principal do conteúdo (flex: 1) - rola independentemente - **Azul claro pastel (#E8F0FE)**
+- **AppFooter**: Footer fixo na parte inferior
+- Layout responsivo com flexbox
+
+### 👨‍⚕️ **Profissional da Saúde (Professional)** (Novo Layout)
+- **AppHeader**: Header principal fixo no topo (4rem altura, 100% largura)
+- **ProfessionalDashboardHeader**: Header específico fixo logo abaixo do AppHeader (cinza claro)
+- **SideBar**: Menu lateral (16rem largura, cinza claro) - limitador do submenu
+- **DashboardArea**: Área principal do conteúdo (flex: 1) - rola independentemente - **Verde menta suave (#E7F6EC)**
+- **AppFooter**: Footer fixo na parte inferior
+- Layout responsivo com flexbox
+
+### 🎧 **Suporte (Assistant)** (Novo Layout)
+- **AppHeader**: Header principal fixo no topo (4rem altura, 100% largura)
+- **SupportDashboardHeader**: Header específico fixo logo abaixo do AppHeader (cinza claro)
+- **SideBar**: Menu lateral (16rem largura, cinza claro) - limitador do submenu
+- **DashboardArea**: Área principal do conteúdo (flex: 1) - rola independentemente - **Lavanda clara (#F0EDFA)**
 - **AppFooter**: Footer fixo na parte inferior
 - Layout responsivo com flexbox
 
 ### 👥 **Outros Roles** (Layout Antigo)
 - **Super Admin**: Gestão de sistema e relatórios globais
-- **Manager**: Gestão de clínicas e controle operacional  
-- **Professional**: Atendimento e recursos clínicos
-- **Assistant**: Suporte e assistência
-- **Client**: Acesso limitado ao sistema
+- **Manager**: Gestão de clínicas e controle operacional
 
 Todos os outros roles continuam usando a estrutura antiga com cards simples dentro de um container.
 
 ## 🎯 Componentes
 
-### DashboardLayout
-Componente principal que organiza todos os elementos do layout usando flexbox:
+### Layouts Específicos
+Cada perfil tem seu próprio layout e header específico:
 
+- **DashboardLayout**: Layout base para admin
+- **PatientDashboardLayout**: Layout específico para pacientes
+- **ProfessionalDashboardLayout**: Layout específico para profissionais da saúde
+- **SupportDashboardLayout**: Layout específico para suporte
+
+### Headers Específicos
 - **AdminDashboardHeader**: Header específico do admin (4rem altura, cinza claro, FIXO)
+- **PatientDashboardHeader**: Header específico do paciente (4rem altura, cinza claro, FIXO)
+- **ProfessionalDashboardHeader**: Header específico do profissional (4rem altura, cinza claro, FIXO)
+- **SupportDashboardHeader**: Header específico do suporte (4rem altura, cinza claro, FIXO)
+
+### Componentes Compartilhados
 - **SideBar**: Fixo à esquerda (16rem largura, cinza claro) - limitador do submenu
-- **DashboardArea**: Ocupa o espaço restante (flex: 1) - rola independentemente
+- **DashboardArea**: Ocupa o espaço restante (flex: 1) - rola independentemente - **Cores específicas por perfil**
 - **AppFooter**: Fixo na parte inferior (4rem altura)
 
 **Nota**: O AppHeader principal permanece fixo no topo através do AppHeaderLayout.
@@ -66,12 +104,12 @@ Componente principal que organiza todos os elementos do layout usando flexbox:
 ### Uso Básico
 
 ```tsx
-import { DashboardLayout } from '../components';
+import { PatientDashboardLayout } from '../components';
 
-const MyDashboard = () => {
+const MyPatientDashboard = () => {
   return (
-    <DashboardLayout
-      headerContent={<div>Conteúdo do Header Admin</div>}
+    <PatientDashboardLayout
+      headerContent={<div>Conteúdo do Header Paciente</div>}
       sidebarContent={<div>Menu da Sidebar</div>}
       dashboardContent={<div>Conteúdo Principal</div>}
       footerContent={<div>Rodapé</div>}
@@ -94,14 +132,19 @@ O layout é responsivo e se adapta a diferentes tamanhos de tela:
 - Componentes seguem o design system do projeto
 - Cores e espaçamentos consistentes
 - Suporte a temas claro/escuro
-- **Cores específicas do Admin**: Cinza claro (#f8f9fa) para header e sidebar
+- **Cores específicas**: 
+  - **Headers e Sidebars**: Cinza claro (#f8f9fa)
+  - **DashboardArea por perfil**:
+    - **Admin/Paciente**: Azul claro pastel (#E8F0FE)
+    - **Profissional**: Verde menta suave (#E7F6EC)
+    - **Suporte**: Lavanda clara (#F0EDFA)
 
 ## 🔧 Customização
 
 Para criar um novo dashboard específico:
 
 1. Crie um novo arquivo em `views/`
-2. Para admin: Importe o `DashboardLayout`
+2. Para perfis com novo layout: Importe o layout específico
 3. Para outros roles: Use a estrutura de cards simples
 4. Defina o conteúdo para cada área
 5. Exporte o componente
@@ -123,10 +166,10 @@ O `dashboard.tsx` verifica o role do usuário autenticado:
 ```tsx
 const { user } = useAuthContext();
 
-if (user?.role === 'admin') {
+if (['admin', 'client', 'professional', 'assistant'].includes(user?.role || '')) {
   // Renderiza o novo layout diretamente (sem container adicional)
   // O AppHeader permanece fixo através do AppHeaderLayout
-  return <AdminDashboard />;
+  return renderDashboardByRole();
 } else {
   // Renderiza a estrutura antiga com container
   return (
@@ -141,29 +184,57 @@ if (user?.role === 'admin') {
 }
 ```
 
-## 🎯 Layout do Admin
+## 🎯 Layout dos Novos Dashboards
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    AppHeader (FIXO)                     │ ← Fixo no topo, 100% largura
 ├─────────────┬───────────────────────────────────────────┤
-│             │      AdminDashboardHeader (FIXO)          │ ← Fixo logo abaixo do AppHeader
+│             │      [Role]DashboardHeader (FIXO)         │ ← Fixo logo abaixo do AppHeader
 │   SideBar   ├───────────────────────────────────────────┤
 │ (cinza)     │                                           │
 │ limitador   │                                           │
 │             │           DashboardArea                   │ ← Conteúdo principal (rola)
-│             │                                           │
+│             │        (cor específica por perfil)        │
 │             │                                           │
 ├─────────────┴───────────────────────────────────────────┤
 │                    AppFooter (FIXO)                     │
 └─────────────────────────────────────────────────────────┘
 ```
 
+## ✅ Dashboards Implementados
+
+### 👑 **Admin**
+- **Header**: "Dashboard Administrativo" + botão "Config"
+- **Sidebar**: Menu Principal (Dashboard, Usuários, Clínicas, Relatórios, Configurações)
+- **Métricas**: Total de Usuários, Clínicas Ativas, Consultas Hoje, Receita Mensal
+- **Cor de Fundo**: Azul claro pastel (#E8F0FE)
+
+### 👤 **Paciente (Client)**
+- **Header**: "Meu Painel - Paciente" + botão "Agendar"
+- **Sidebar**: Menu do Paciente (Meu Painel, Minhas Consultas, Meu Prontuário, Meus Exames, Prescrições, Meu Perfil)
+- **Métricas**: Próxima Consulta, Consultas Realizadas, Exames Pendentes, Prescrições Ativas
+- **Cor de Fundo**: Azul claro pastel (#E8F0FE)
+
+### 👨‍⚕️ **Profissional da Saúde (Professional)**
+- **Header**: "Painel Profissional" + botão "Nova Consulta"
+- **Sidebar**: Menu Profissional (Dashboard, Minha Agenda, Meus Pacientes, Prontuários, Exames, Prescrições, Relatórios)
+- **Métricas**: Consultas Hoje, Pacientes Atendidos, Próxima Consulta, Exames Pendentes
+- **Cor de Fundo**: Verde menta suave (#E7F6EC)
+
+### 🎧 **Suporte (Assistant)**
+- **Header**: "Painel de Suporte" + botão "Atender"
+- **Sidebar**: Menu de Suporte (Dashboard, Tickets, Chamados, Usuários, Sistema, Relatórios, Base de Conhecimento)
+- **Métricas**: Tickets Abertos, Chamados Hoje, Tempo Médio, Satisfação
+- **Cor de Fundo**: Lavanda clara (#F0EDFA)
+
 ## ✅ Correções Implementadas
 
 - **AppHeader**: Agora fixo no topo com `position: fixed` e `width: 100%`
-- **AdminDashboardHeader**: Agora fixo logo abaixo do AppHeader, ocupando 100% da largura entre sidebar e fim da tela
+- **Headers Específicos**: Cada perfil tem seu header fixo logo abaixo do AppHeader
 - **SideBar**: Posicionado corretamente abaixo do AppHeader fixo
 - **DashboardArea**: Rola independentemente, sem afetar os headers fixos
-- **Cores**: AdminDashboardHeader e SideBar com cinza claro (#f8f9fa)
+- **Cores**: Todos os headers e sidebars com cinza claro (#f8f9fa)
+- **Cores de Fundo**: Cada perfil tem sua cor específica no DashboardArea
 - **Espaçamento**: Todos os componentes com espaçamento correto
+- **Layouts Específicos**: Cada perfil tem seu layout e conteúdo personalizado
