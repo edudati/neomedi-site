@@ -11,7 +11,7 @@ import type { UseFormReturn } from 'react-hook-form';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { signUp, signUpWithGoogle, isLoading, error, successMessage } = useAuthContext();
+  const { signUp, handleGoogleAuth, isLoading, error, successMessage } = useAuthContext();
   const { showSuccess, showError } = useNotification();
   const form = useAuthForm('signup') as UseFormReturn<SignUpFormData>;
 
@@ -24,10 +24,8 @@ const SignUp = () => {
       
       if (result.success) {
         showSuccess(result.message);
-        // Navegar para dashboard após cadastro bem-sucedido
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+        // Redirecionamento imediato após signup bem-sucedido
+        navigate('/dashboard');
       } else {
         showError(result.message);
       }
@@ -38,18 +36,17 @@ const SignUp = () => {
 
   const handleGoogleSignUp = async () => {
     try {
-      const result = await signUpWithGoogle();
+      const result = await handleGoogleAuth();
       
       if (result.success) {
         showSuccess(result.message);
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+        // Redirecionamento imediato após signup bem-sucedido
+        navigate('/dashboard');
       } else {
         showError(result.message);
       }
     } catch (error) {
-      showError('Erro ao fazer cadastro com Google');
+      showError('Erro ao criar conta com Google');
     }
   };
 

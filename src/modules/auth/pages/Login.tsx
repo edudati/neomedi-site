@@ -11,7 +11,7 @@ import type { UseFormReturn } from 'react-hook-form';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, loginWithGoogle, isLoading, error, successMessage } = useAuthContext();
+  const { login, handleGoogleAuth, isLoading, error, successMessage } = useAuthContext();
   const { showSuccess, showError } = useNotification();
   const form = useAuthForm('login') as UseFormReturn<LoginFormData>;
 
@@ -24,10 +24,8 @@ const Login = () => {
       
       if (result.success) {
         showSuccess(result.message);
-        // Navegar para dashboard após login bem-sucedido
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+        // Redirecionamento imediato após login bem-sucedido
+        navigate('/dashboard');
       } else {
         showError(result.message);
       }
@@ -38,13 +36,12 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await loginWithGoogle();
+      const result = await handleGoogleAuth();
       
       if (result.success) {
         showSuccess(result.message);
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+        // Redirecionamento imediato após login bem-sucedido
+        navigate('/dashboard');
       } else {
         showError(result.message);
       }

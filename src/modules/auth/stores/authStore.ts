@@ -9,6 +9,7 @@ interface AuthStore extends AuthState {
   loginWithGoogle: () => Promise<AuthResult>;
   signUp: (credentials: SignUpCredentials) => Promise<AuthResult>;
   signUpWithGoogle: () => Promise<AuthResult>;
+  handleGoogleAuth: () => Promise<AuthResult>;
   forgotPassword: (email: string) => Promise<AuthResult>;
   logout: () => void;
   setError: (error: string | null) => void;
@@ -30,6 +31,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       set({
         user: currentUser,
         isAuthenticated: true,
+        isLoading: false,
+        error: null,
+        successMessage: null
+      });
+    } else {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+        successMessage: null
       });
     }
   },
@@ -51,19 +63,40 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       // 3. Enviar token para sua API
       const apiResponse = await authService.login(firebaseToken);
 
-      if (apiResponse.success && apiResponse.user) {
-        set({
-          user: apiResponse.user,
-          isAuthenticated: true,
-          isLoading: false,
-          successMessage: apiResponse.message || 'Login realizado com sucesso!'
-        });
+      if (apiResponse.success) {
+        let userData = apiResponse.user;
+        if (!userData && apiResponse.access_token) {
+          try {
+            userData = authService.getCurrentUser();
+          } catch (error) {
+            console.error('Erro ao decodificar JWT:', error);
+          }
+        }
 
-        return {
-          success: true,
-          message: apiResponse.message || 'Login realizado com sucesso!',
-          user: apiResponse.user
-        };
+        if (userData) {
+          set({
+            user: userData,
+            isAuthenticated: true,
+            isLoading: false,
+            successMessage: apiResponse.message || 'Login realizado com sucesso!'
+          });
+
+          return {
+            success: true,
+            message: apiResponse.message || 'Login realizado com sucesso!',
+            user: userData
+          };
+        } else {
+          set({
+            isLoading: false,
+            error: 'Erro ao obter dados do usuário'
+          });
+
+          return {
+            success: false,
+            message: 'Erro ao obter dados do usuário'
+          };
+        }
       } else {
         set({
           isLoading: false,
@@ -110,19 +143,41 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
       const apiResponse = await authService.login(firebaseToken);
 
-      if (apiResponse.success && apiResponse.user) {
-        set({
-          user: apiResponse.user,
-          isAuthenticated: true,
-          isLoading: false,
-          successMessage: apiResponse.message || 'Login com Google realizado com sucesso!'
-        });
+      if (apiResponse.success) {
+        // Se a API não enviou o user, usar os dados do JWT
+        let userData = apiResponse.user;
+        if (!userData && apiResponse.access_token) {
+          try {
+            userData = authService.getCurrentUser();
+          } catch (error) {
+            console.error('❌ Erro ao decodificar JWT (Google):', error);
+          }
+        }
 
-        return {
-          success: true,
-          message: apiResponse.message || 'Login com Google realizado com sucesso!',
-          user: apiResponse.user
-        };
+        if (userData) {
+          set({
+            user: userData,
+            isAuthenticated: true,
+            isLoading: false,
+            successMessage: apiResponse.message || 'Login com Google realizado com sucesso!'
+          });
+
+          return {
+            success: true,
+            message: apiResponse.message || 'Login com Google realizado com sucesso!',
+            user: userData
+          };
+        } else {
+          set({
+            isLoading: false,
+            error: 'Erro ao obter dados do usuário'
+          });
+
+          return {
+            success: false,
+            message: 'Erro ao obter dados do usuário'
+          };
+        }
       } else {
         set({
           isLoading: false,
@@ -261,6 +316,94 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
+  handleGoogleAuth: async (): Promise<AuthResult> => {
+    set({ isLoading: true, error: null });
+    
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
+      const firebaseUserCredential = await signInWithPopup(auth, provider);
+      const firebaseToken = await firebaseUserCredential.user.getIdToken();
+
+      // Usar a mesma lógica do login normal
+      const apiResponse = await authService.login(firebaseToken);
+
+      if (apiResponse.success) {
+        let userData = apiResponse.user;
+        if (!userData && apiResponse.access_token) {
+          try {
+            userData = authService.getCurrentUser();
+          } catch (error) {
+            console.error('Erro ao decodificar JWT:', error);
+          }
+        }
+
+        if (userData) {
+          set({
+            user: userData,
+            isAuthenticated: true,
+            isLoading: false,
+            successMessage: apiResponse.message || 'Login com Google realizado com sucesso!'
+          });
+
+          return {
+            success: true,
+            message: apiResponse.message || 'Login com Google realizado com sucesso!',
+            user: userData
+          };
+        } else {
+          set({
+            isLoading: false,
+            error: 'Erro ao obter dados do usuário'
+          });
+
+          return {
+            success: false,
+            message: 'Erro ao obter dados do usuário'
+          };
+        }
+      } else {
+        set({
+          isLoading: false,
+          error: apiResponse.message || 'Erro ao fazer login com Google'
+        });
+
+        return {
+          success: false,
+          message: apiResponse.message || 'Erro ao fazer login com Google'
+        };
+      }
+    } catch (error: any) {
+      let errorMessage = 'Erro ao processar autenticação com Google';
+      
+      // Tratar erros específicos do Firebase
+      if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = 'Login cancelado pelo usuário';
+      } else if (error.code === 'auth/popup-blocked') {
+        errorMessage = 'Popup bloqueado pelo navegador. Permita popups para este site.';
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        errorMessage = 'Login cancelado';
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = 'Erro de conexão. Verifique sua internet.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      set({
+        isLoading: false,
+        error: errorMessage
+      });
+
+      return {
+        success: false,
+        message: errorMessage
+      };
+    }
+  },
+
   forgotPassword: async (email: string): Promise<AuthResult> => {
     set({ isLoading: true, error: null });
     try {
@@ -287,6 +430,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   logout: () => {
+    // Limpar autenticação do Firebase
+    auth.signOut();
+    
+    // Limpar tokens e estado
     authService.logout();
     set({
       user: null,

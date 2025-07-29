@@ -13,6 +13,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<AuthResult>;
   signUp: (credentials: SignUpCredentials) => Promise<AuthResult>;
   signUpWithGoogle: () => Promise<AuthResult>;
+  handleGoogleAuth: () => Promise<AuthResult>;
   forgotPassword: (email: string) => Promise<AuthResult>;
   logout: () => void;
   setError: (error: string | null) => void;
@@ -21,7 +22,7 @@ interface AuthContextType {
   initializeAuth: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;

@@ -1,166 +1,98 @@
-import { useState, useEffect } from 'react';
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signOut as firebaseSignOut
-} from 'firebase/auth';
-import type { User } from 'firebase/auth';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { auth } from '../lib/firebase';
-import { authService, tokenStorage, decodeJWT } from '../services/authService';
-import type { AuthResponse, AuthUser } from '../types/authTypes';
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
+import { authService } from '../services/authService';
+import type { SignUpFormData } from '../schemas/authSchemas';
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const context = useContext(AuthContext);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('Firebase auth state changed:', user);
-      setUser(user);
-      
-      // Check if we have valid JWT tokens
-      if (authService.isAuthenticated()) {
-        console.log('JWT tokens found, extracting user data...');
-        // Extract user data from JWT token
-        const currentUser = authService.getCurrentUser();
-        console.log('Current user from JWT:', currentUser);
-        if (currentUser) {
-          setAuthUser(currentUser);
-        }
-        setLoading(false);
-      } else {
-        console.log('No JWT tokens found');
-        // No tokens, not authenticated
-        setAuthUser(null);
-        setLoading(false);
-      }
-    });
+  if (!context) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
 
-    return unsubscribe;
-  }, []);
-
-  const signUpWithEmail = async (email: string, password: string) => {
+  const signUp = async (data: SignUpFormData) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
-      
-      const response = await authService.signUp(idToken);
-      
-      if (response.success && response.access_token) {
-        // Extract user data from JWT token
-        const userData = decodeJWT(response.access_token);
-        // Update with response data
-        userData.email_verified = response.email_verified;
-        userData.is_active = response.is_active;
-        userData.created_at = response.created_at;
-        
-        setAuthUser(userData);
-        return { success: true, message: response.message };
-      } else {
-        return { success: false, message: response.message };
+      // 1. Criar usuário no Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
+      // 2. Obter o token do Firebase
+      const firebaseToken = await userCredential.user.getIdToken();
+
+      // 3. Enviar o token para nossa API
+      const response = await authService.signUp(firebaseToken);
+
+      if (!response.success) {
+        throw new Error(response.message);
       }
-    } catch (error: any) {
-      return { 
-        success: false, 
-        message: error.message || 'Erro ao criar conta' 
-      };
+
+      return response;
+    } catch (error) {
+      console.error('Erro no processo de signup:', error);
+      throw error;
     }
   };
 
-  const signInWithEmail = async (email: string, password: string) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
-      
-      const response = await authService.login(idToken);
-      
-      if (response.success && response.access_token) {
-        // Extract user data from JWT token
-        const userData = decodeJWT(response.access_token);
-        // Update with response data
-        userData.email_verified = response.email_verified;
-        userData.is_active = response.is_active;
-        userData.created_at = response.created_at;
-        
-        setAuthUser(userData);
-        return { success: true, message: response.message };
-      } else {
-        return { success: false, message: response.message };
-      }
-    } catch (error: any) {
-      return { 
-        success: false, 
-        message: error.message || 'Erro ao fazer login' 
-      };
-    }
-  };
-
-  const signInWithGoogle = async () => {
+  const signUpWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      const idToken = await userCredential.user.getIdToken();
+      const firebaseToken = await userCredential.user.getIdToken();
       
-      // Primeiro tenta fazer signup
-      let response = await authService.signUp(idToken);
-      
+      const response = await authService.signUp(firebaseToken);
+
       if (!response.success) {
-        // Se não é novo usuário, tenta fazer login
-        response = await authService.login(idToken);
+        throw new Error(response.message);
       }
-      
-      if (response.success && response.access_token) {
-        // Extract user data from JWT token
-        const userData = decodeJWT(response.access_token);
-        // Update with response data
-        userData.email_verified = response.email_verified;
-        userData.is_active = response.is_active;
-        userData.created_at = response.created_at;
-        
-        setAuthUser(userData);
-        return { 
-          success: true, 
-          message: response.message 
-        };
-      } else {
-        return { 
-          success: false, 
-          message: response.message 
-        };
-      }
-    } catch (error: any) {
-      return { 
-        success: false, 
-        message: error.message || 'Erro ao fazer login com Google' 
-      };
+
+      return response;
+    } catch (error) {
+      console.error('Erro no signup com Google:', error);
+      throw error;
     }
   };
 
-  const signOut = async () => {
+  // Função inteligente para Google que decide entre login e signup
+  const handleGoogleAuth = async () => {
     try {
-      await firebaseSignOut(auth);
-      authService.logout(); // Clear JWT tokens
-      setAuthUser(null);
-      return { success: true };
-    } catch (error: any) {
-      return { 
-        success: false, 
-        message: error.message || 'Erro ao fazer logout' 
-      };
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const firebaseToken = await userCredential.user.getIdToken();
+      
+      // Tentar fazer signup primeiro
+      const signUpResponse = await authService.signUp(firebaseToken);
+      
+      if (signUpResponse.success) {
+        // Signup bem-sucedido - usuário novo
+        return signUpResponse;
+      } else if (signUpResponse.message?.includes('já existe') || signUpResponse.message?.includes('already exists')) {
+        // Usuário já existe, tentar login
+        const loginResponse = await authService.login(firebaseToken);
+        
+        if (loginResponse.success) {
+          return loginResponse;
+        } else {
+          throw new Error(loginResponse.message || 'Erro ao fazer login');
+        }
+      } else {
+        // Outro erro no signup
+        throw new Error(signUpResponse.message || 'Erro ao criar conta');
+      }
+    } catch (error) {
+      console.error('Erro no processo de autenticação com Google:', error);
+      throw error;
     }
   };
 
   return {
-    user,
-    authUser,
-    loading,
-    signUpWithEmail,
-    signInWithEmail,
-    signInWithGoogle,
-    signOut,
+    ...context,
+    signUp,
+    signUpWithGoogle,
+    handleGoogleAuth,
   };
 }; 
