@@ -5,12 +5,16 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuthContext } from './modules/auth/context/AuthContext';
 import { ProtectedRoute } from './modules/auth/components/ProtectedRoute';
 import { useTokenRefresh } from './modules/auth/hooks/useTokenRefresh';
+import { AppLayout } from './modules/shared/components/AppLayout';
 import Login from './modules/auth/pages/Login';
 import SignUp from './modules/auth/pages/SignUp';
 import ForgotPassword from './modules/auth/pages/ForgotPassword';
 import Unauthorized from './modules/auth/pages/Unauthorized';
 import Dashboard from './modules/dashboard/pages/dashboard';
+import { MyProfilePage } from './modules/settings/users/pages/me';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -28,11 +32,12 @@ const AppContent = () => {
   const { initializeAuth } = useAuthContext();
   
   // Inicializar autenticação e refresh automático
-  useTokenRefresh();
+  // useTokenRefresh(); // Comentado temporariamente para debug
 
   useEffect(() => {
+    console.log('🚀 App.tsx - useEffect initializeAuth chamado');
     initializeAuth();
-  }, [initializeAuth]);
+  }, []); // Remover dependência para evitar re-renders
 
   return (
     <div className="App">
@@ -49,10 +54,24 @@ const AppContent = () => {
           path="/dashboard" 
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AppLayout />
             </ProtectedRoute>
           } 
-        />
+        >
+          <Route index element={<Dashboard />} />
+        </Route>
+
+        {/* Rota do perfil */}
+        <Route
+          path="/me"
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<MyProfilePage />} />
+        </Route>
         
         {/* Rota 404 */}
         <Route path="*" element={<Login />} />

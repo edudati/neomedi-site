@@ -188,7 +188,25 @@ class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return tokenStorage.hasTokens();
+    const token = tokenStorage.getAccessToken();
+    console.log('🔑 Token encontrado:', !!token);
+    
+    if (!token) return false;
+    
+    try {
+      const decoded = jwtDecode<JWTDecoded>(token);
+      const currentTime = Date.now() / 1000;
+      const isExpired = decoded.exp <= currentTime + 300; // 5 minutos de margem
+      
+      console.log('⏰ Token expira em:', new Date(decoded.exp * 1000));
+      console.log('⏰ Tempo atual:', new Date(currentTime * 1000));
+      console.log('⏰ Está expirado:', isExpired);
+      
+      return !isExpired;
+    } catch (error) {
+      console.error('❌ Error decoding JWT token:', error);
+      return false;
+    }
   }
 
   // Get current user from JWT token

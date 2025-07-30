@@ -1,58 +1,66 @@
-import { useAuthContext } from '../../auth/context/AuthContext'
-import { LogoutButton } from '../../auth/components/LogoutButton'
-import SuperDashboard from '../views/superDashboard'
-import AdminDashboard from '../views/adminDashboard'
-import ManagerDashboard from '../views/managerDashboard'
-import ProfessionalDashboard from '../views/professionalDashboard'
-import AssistantDashboard from '../views/assistantDashboard'
-import ClientDashboard from '../views/clientDashboard'
+import React from 'react';
+import { useAuthContext } from '../../auth/context/AuthContext';
+import AdminDashboard from '../views/adminDashboard';
+import PatientDashboard from '../views/patientDashboard';
+import ProfessionalDashboard from '../views/professionalDashboard';
+import SupportDashboard from '../views/supportDashboard';
+import SuperDashboard from '../views/superDashboard';
+import ManagerDashboard from '../views/managerDashboard';
 
-const Dashboard = () => {
-  const { user } = useAuthContext()
+const DashboardPage: React.FC = () => {
+  const { user } = useAuthContext();
 
+  // Renderizar dashboard baseado no role do usuário
   const renderDashboardByRole = () => {
     switch (user?.role) {
-      case 'super':
-        return <SuperDashboard />
       case 'admin':
-      case 'manager':
-        // Admin e manager compartilham a mesma view
-        return <AdminDashboard />
-      case 'professional':
-        return <ProfessionalDashboard />
-      case 'assistant':
-        return <AssistantDashboard />
+        // Admin usa o novo layout - renderizar diretamente
+        return <AdminDashboard />;
       case 'client':
-        return <ClientDashboard />
+        // Paciente usa o novo layout - renderizar diretamente
+        return <PatientDashboard />;
+      case 'professional':
+        // Profissional da saúde usa o novo layout - renderizar diretamente
+        return <ProfessionalDashboard />;
+      case 'assistant':
+        // Suporte usa o novo layout - renderizar diretamente
+        return <SupportDashboard />;
+      case 'super':
+        return <SuperDashboard />;
+      case 'manager':
+        return <ManagerDashboard />;
       default:
-        return <div className="alert alert-danger">Acesso não autorizado</div>
+        return (
+          <div className="alert alert-danger">
+            <h4>Acesso não autorizado</h4>
+            <p>Seu perfil não tem permissão para acessar esta área.</p>
+          </div>
+        );
     }
+  };
+
+  // Se for admin, client, professional ou assistant, renderizar o novo layout diretamente
+  if (['admin', 'client', 'professional', 'assistant'].includes(user?.role || '')) {
+    return renderDashboardByRole();
   }
 
+  // Para outros roles (super, manager), usar a estrutura antiga com container
   return (
     <div className="container py-4">
-      {/* Header com informações do usuário e logout */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h1 className="h3 mb-1">Dashboard</h1>
+      {/* Dashboard Content */}
+      <div className="card">
+        <div className="card-header">
+          <h1 className="h3 mb-0">Dashboard</h1>
           <p className="text-muted mb-0">
             Bem-vindo, {user?.name} ({user?.role})
           </p>
         </div>
-        <LogoutButton variant="button" className="btn-sm">
-          <i className="fas fa-sign-out-alt me-2"></i>
-          Sair
-        </LogoutButton>
-      </div>
-
-      {/* Dashboard Content */}
-      <div className="card">
         <div className="card-body">
           {renderDashboardByRole()}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default DashboardPage;

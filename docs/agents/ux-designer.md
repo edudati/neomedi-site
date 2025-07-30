@@ -13,8 +13,7 @@ Este agente atua como um assistente especializado em UX/UI para o desenvolviment
 - **Acesso a arquivos:**  
   Para gerar e modificar componentes reais, conceda acesso aos diretórios de UI e estrutura de componentes:
 
-src/modules/dashboard/
-src/modules/auth/
+src/modules/ (todos)
 src/styles/
 src/components/           (caso o agente precise reaproveitar ou usar componentes globais)
 docs/design/              (apenas leitura, se houver documentação complementar de design, ou para inserir documentação de design)

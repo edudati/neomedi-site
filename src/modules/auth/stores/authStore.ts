@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { authService } from '../services/authService';
@@ -18,7 +19,9 @@ interface AuthStore extends AuthState {
   initializeAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
@@ -26,23 +29,42 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   successMessage: null,
 
   initializeAuth: () => {
+    console.log('🔄 Zustand set chamado com: { isLoading: true }');
+    set({ isLoading: true });
+    
+    console.log('🔍 Inicializando autenticação...');
+    
+    // Apenas verificar JWT tokens (sem Firebase Auth)
     const currentUser = authService.getCurrentUser();
-    if (currentUser && authService.isAuthenticated()) {
-      set({
+    const isAuth = authService.isAuthenticated();
+    
+    console.log('👤 Usuário JWT:', currentUser);
+    console.log('🔐 JWT válido:', isAuth);
+    
+    if (currentUser && isAuth) {
+      console.log('✅ Usuário autenticado (JWT), definindo estado...');
+      const newState = {
         user: currentUser,
         isAuthenticated: true,
         isLoading: false,
         error: null,
         successMessage: null
-      });
+      };
+      console.log('🔄 Zustand set chamado com:', newState);
+      set(newState);
     } else {
-      set({
+      console.log('❌ JWT inválido ou inexistente, limpando estado...');
+      // Limpar tokens se inválidos
+      authService.logout();
+      const newState = {
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: null,
         successMessage: null
-      });
+      };
+      console.log('🔄 Zustand set chamado com:', newState);
+      set(newState);
     }
   },
 
@@ -430,10 +452,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   logout: () => {
-    // Limpar autenticação do Firebase
-    auth.signOut();
-    
-    // Limpar tokens e estado
+    // Limpar tokens e estado (sem Firebase Auth)
     authService.logout();
     set({
       user: null,
@@ -454,4 +473,25 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   clearMessages: () => {
     set({ error: null, successMessage: null });
   }
-})); 
+         }),
+     {
+       name: 'auth-store',
+       storage: {
+         getItem: (name) => {
+           const value = sessionStorage.getItem(name);
+           return value ? JSON.parse(value) : null;
+         },
+         setItem: (name, value) => {
+           sessionStorage.setItem(name, JSON.stringify(value));
+         },
+         removeItem: (name) => {
+           sessionStorage.removeItem(name);
+         }
+       },
+       partialize: (state) => ({
+         user: state.user,
+         isAuthenticated: state.isAuthenticated
+       })
+     }
+   )
+ ); 

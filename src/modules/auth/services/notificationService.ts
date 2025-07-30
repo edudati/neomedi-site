@@ -4,7 +4,7 @@ export const notificationService = {
   success: (message: string) => {
     toast.success(message, {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 1500, // Reduzido de 3000ms para 1500ms
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -15,7 +15,7 @@ export const notificationService = {
   error: (message: string) => {
     toast.error(message, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2500, // Reduzido de 5000ms para 2500ms
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -26,7 +26,7 @@ export const notificationService = {
   info: (message: string) => {
     toast.info(message, {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 1500, // Reduzido de 3000ms para 1500ms
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -37,7 +37,7 @@ export const notificationService = {
   warning: (message: string) => {
     toast.warning(message, {
       position: "top-right",
-      autoClose: 4000,
+      autoClose: 2000, // Reduzido de 4000ms para 2000ms
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
