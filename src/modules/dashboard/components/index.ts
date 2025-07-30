@@ -6,7 +6,6 @@ export { default as ProfessionalDashboardHeader } from './ProfessionalDashboardH
 export { default as SupportDashboardHeader } from './SupportDashboardHeader';
 export { default as SideBar } from './SideBar';
 export { default as DashboardArea } from './DashboardArea';
-export { default as AppFooter } from './AppFooter';
 export { default as DashboardLayout } from './DashboardLayout';
 export { default as PatientDashboardLayout } from './PatientDashboardLayout';
 export { default as ProfessionalDashboardLayout } from './ProfessionalDashboardLayout';

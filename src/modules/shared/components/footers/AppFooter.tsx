@@ -24,4 +24,4 @@ const AppFooter: React.FC<AppFooterProps> = ({ children }) => {
   );
 };
 
-export default AppFooter;
+export default AppFooter; 

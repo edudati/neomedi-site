@@ -2,7 +2,7 @@ import React from 'react';
 import SupportDashboardHeader from './SupportDashboardHeader';
 import SideBar from './SideBar';
 import DashboardArea from './DashboardArea';
-import AppFooter from './AppFooter';
+import { AppFooter } from '@/modules/shared/components/footers';
 
 interface SupportDashboardLayoutProps {
   headerContent?: React.ReactNode;

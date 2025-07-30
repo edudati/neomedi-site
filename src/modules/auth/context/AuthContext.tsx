@@ -31,6 +31,12 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const authStore = useAuthStore();
 
+  console.log('🏗️ AuthProvider - Renderizando com store:', {
+    isAuthenticated: authStore.isAuthenticated,
+    isLoading: authStore.isLoading,
+    user: authStore.user
+  });
+
   return (
     <AuthContext.Provider value={authStore}>
       {children}
@@ -43,5 +49,10 @@ export const useAuthContext = () => {
   if (context === undefined) {
     throw new Error('useAuthContext must be used within an AuthProvider');
   }
+  
+  console.log('🔗 useAuthContext - isAuthenticated:', context.isAuthenticated);
+  console.log('🔗 useAuthContext - isLoading:', context.isLoading);
+  console.log('🔗 useAuthContext - user:', context.user);
+  
   return context;
 }; 

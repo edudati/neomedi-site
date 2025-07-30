@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '../../modules/auth/context/AuthContext';
-import { LogoutButton } from '../ui/buttons/LogoutButton';
-import logo from '../../images/logo-full.png';
+import { useAuthContext } from '../../../auth/context/AuthContext';
+import { LogoutButton } from '../../../../components/ui/buttons/LogoutButton';
+import logo from '../../../../images/logo-full.png';
 
 export const AppHeader = () => {
   const { user } = useAuthContext();
@@ -130,7 +130,7 @@ export const AppHeader = () => {
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="/profile">
+                <Link className="dropdown-item" to="/me">
                   <i className="bi bi-person-circle me-2"></i>
                   Meu Perfil
                 </Link>
@@ -148,4 +148,4 @@ export const AppHeader = () => {
       </div>
     </header>
   );
-};
+}; 
