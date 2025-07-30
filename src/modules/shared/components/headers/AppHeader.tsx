@@ -135,6 +135,14 @@ export const AppHeader = () => {
                   Meu Perfil
                 </Link>
               </li>
+              {user?.role === 'admin' && (
+                <li>
+                  <Link className="dropdown-item" to="/company">
+                    <i className="bi bi-building me-2"></i>
+                    Minha Empresa
+                  </Link>
+                </li>
+              )}
               <li><hr className="dropdown-divider" /></li>
               <li>
                 <LogoutButton variant="link" className="dropdown-item text-danger">

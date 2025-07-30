@@ -12,6 +12,7 @@ import ForgotPassword from './modules/auth/pages/ForgotPassword';
 import Unauthorized from './modules/auth/pages/Unauthorized';
 import Dashboard from './modules/dashboard/pages/dashboard';
 import { MyProfilePage } from './modules/settings/users/pages/me';
+import { CompanyPage } from './modules/settings/companies/pages/company';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -71,6 +72,18 @@ const AppContent = () => {
           }
         >
           <Route index element={<MyProfilePage />} />
+        </Route>
+
+        {/* Rota da empresa */}
+        <Route
+          path="/company"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<CompanyPage />} />
         </Route>
         
         {/* Rota 404 */}
