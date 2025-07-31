@@ -13,6 +13,7 @@ import Unauthorized from './modules/auth/pages/Unauthorized';
 import Dashboard from './modules/dashboard/pages/dashboard';
 import { MyProfilePage } from './modules/settings/users/pages/me';
 import { CompanyPage } from './modules/settings/companies/pages/company';
+import { PlacesPage } from './modules/settings/companies/pages/places';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -36,7 +37,6 @@ const AppContent = () => {
   // useTokenRefresh(); // Comentado temporariamente para debug
 
   useEffect(() => {
-    console.log('🚀 App.tsx - useEffect initializeAuth chamado');
     initializeAuth();
   }, []); // Remover dependência para evitar re-renders
 
@@ -84,6 +84,18 @@ const AppContent = () => {
           }
         >
           <Route index element={<CompanyPage />} />
+        </Route>
+
+        {/* Rota dos locais */}
+        <Route
+          path="/places"
+          element={
+            <ProtectedRoute requiredRole="professional">
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<PlacesPage />} />
         </Route>
         
         {/* Rota 404 */}

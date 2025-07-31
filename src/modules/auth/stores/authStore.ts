@@ -29,42 +29,30 @@ export const useAuthStore = create<AuthStore>()(
   successMessage: null,
 
   initializeAuth: () => {
-    console.log('🔄 Zustand set chamado com: { isLoading: true }');
     set({ isLoading: true });
     
-    console.log('🔍 Inicializando autenticação...');
-    
-    // Apenas verificar JWT tokens (sem Firebase Auth)
+    // Verificar JWT tokens
     const currentUser = authService.getCurrentUser();
     const isAuth = authService.isAuthenticated();
     
-    console.log('👤 Usuário JWT:', currentUser);
-    console.log('🔐 JWT válido:', isAuth);
-    
     if (currentUser && isAuth) {
-      console.log('✅ Usuário autenticado (JWT), definindo estado...');
-      const newState = {
+      set({
         user: currentUser,
         isAuthenticated: true,
         isLoading: false,
         error: null,
         successMessage: null
-      };
-      console.log('🔄 Zustand set chamado com:', newState);
-      set(newState);
+      });
     } else {
-      console.log('❌ JWT inválido ou inexistente, limpando estado...');
       // Limpar tokens se inválidos
       authService.logout();
-      const newState = {
+      set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: null,
         successMessage: null
-      };
-      console.log('🔄 Zustand set chamado com:', newState);
-      set(newState);
+      });
     }
   },
 
@@ -237,22 +225,42 @@ export const useAuthStore = create<AuthStore>()(
       );
 
       const firebaseToken = await firebaseUserCredential.user.getIdToken();
-
       const apiResponse = await authService.signUp(firebaseToken);
 
-      if (apiResponse.success && apiResponse.user) {
-        set({
-          user: apiResponse.user,
-          isAuthenticated: true,
-          isLoading: false,
-          successMessage: apiResponse.message || 'Cadastro realizado com sucesso!'
-        });
+      if (apiResponse.success) {
+        let userData = apiResponse.user;
+        if (!userData && apiResponse.access_token) {
+          try {
+            userData = authService.getCurrentUser();
+          } catch (error) {
+            console.error('Erro ao decodificar JWT:', error);
+          }
+        }
 
-        return {
-          success: true,
-          message: apiResponse.message || 'Cadastro realizado com sucesso!',
-          user: apiResponse.user
-        };
+        if (userData) {
+          set({
+            user: userData,
+            isAuthenticated: true,
+            isLoading: false,
+            successMessage: apiResponse.message || 'Cadastro realizado com sucesso!'
+          });
+
+          return {
+            success: true,
+            message: apiResponse.message || 'Cadastro realizado com sucesso!',
+            user: userData
+          };
+        } else {
+          set({
+            isLoading: false,
+            error: 'Erro ao obter dados do usuário'
+          });
+
+          return {
+            success: false,
+            message: 'Erro ao obter dados do usuário'
+          };
+        }
       } else {
         set({
           isLoading: false,
@@ -350,12 +358,13 @@ export const useAuthStore = create<AuthStore>()(
       const firebaseUserCredential = await signInWithPopup(auth, provider);
       const firebaseToken = await firebaseUserCredential.user.getIdToken();
 
-      // Usar a mesma lógica do login normal
-      const apiResponse = await authService.login(firebaseToken);
-
-      if (apiResponse.success) {
-        let userData = apiResponse.user;
-        if (!userData && apiResponse.access_token) {
+      // Tentar fazer login primeiro
+      const loginResponse = await authService.login(firebaseToken);
+      
+      if (loginResponse.success) {
+        // Login bem-sucedido - usuário já existe
+        let userData = loginResponse.user;
+        if (!userData && loginResponse.access_token) {
           try {
             userData = authService.getCurrentUser();
           } catch (error) {
@@ -368,36 +377,66 @@ export const useAuthStore = create<AuthStore>()(
             user: userData,
             isAuthenticated: true,
             isLoading: false,
-            successMessage: apiResponse.message || 'Login com Google realizado com sucesso!'
+            successMessage: loginResponse.message || 'Login com Google realizado com sucesso!'
           });
 
           return {
             success: true,
-            message: apiResponse.message || 'Login com Google realizado com sucesso!',
+            message: loginResponse.message || 'Login com Google realizado com sucesso!',
             user: userData
           };
+        }
+      } else if (loginResponse.message?.includes('não encontrado') || loginResponse.message?.includes('not found')) {
+        // Usuário não existe, tentar signup
+        const signUpResponse = await authService.signUp(firebaseToken);
+        
+        if (signUpResponse.success) {
+          let userData = signUpResponse.user;
+          if (!userData && signUpResponse.access_token) {
+            try {
+              userData = authService.getCurrentUser();
+            } catch (error) {
+              console.error('Erro ao decodificar JWT:', error);
+            }
+          }
+
+          if (userData) {
+            set({
+              user: userData,
+              isAuthenticated: true,
+              isLoading: false,
+              successMessage: signUpResponse.message || 'Cadastro com Google realizado com sucesso!'
+            });
+
+            return {
+              success: true,
+              message: signUpResponse.message || 'Cadastro com Google realizado com sucesso!',
+              user: userData
+            };
+          }
         } else {
           set({
             isLoading: false,
-            error: 'Erro ao obter dados do usuário'
+            error: signUpResponse.message || 'Erro ao fazer cadastro com Google'
           });
 
           return {
             success: false,
-            message: 'Erro ao obter dados do usuário'
+            message: signUpResponse.message || 'Erro ao fazer cadastro com Google'
           };
         }
-      } else {
-        set({
-          isLoading: false,
-          error: apiResponse.message || 'Erro ao fazer login com Google'
-        });
-
-        return {
-          success: false,
-          message: apiResponse.message || 'Erro ao fazer login com Google'
-        };
       }
+
+      // Se chegou aqui, houve algum erro
+      set({
+        isLoading: false,
+        error: loginResponse.message || 'Erro ao processar autenticação com Google'
+      });
+
+      return {
+        success: false,
+        message: loginResponse.message || 'Erro ao processar autenticação com Google'
+      };
     } catch (error: any) {
       let errorMessage = 'Erro ao processar autenticação com Google';
       
@@ -488,10 +527,13 @@ export const useAuthStore = create<AuthStore>()(
            sessionStorage.removeItem(name);
          }
        },
-       partialize: (state) => ({
-         user: state.user,
-         isAuthenticated: state.isAuthenticated
-       })
+               partialize: (state) => ({
+          user: state.user,
+          isAuthenticated: state.isAuthenticated
+        }),
+        onRehydrateStorage: () => (state) => {
+          // Callback quando o estado é reidratado
+        }
      }
    )
  ); 

@@ -6,7 +6,7 @@ type FormType = 'login' | 'signup' | 'forgot-password';
 
 export const useAuthForm = (formType: FormType = 'login') => {
   if (formType === 'signup') {
-    return useForm<SignUpFormData>({
+    const form = useForm<SignUpFormData>({
       resolver: zodResolver(signUpSchema),
       defaultValues: {
         email: '',
@@ -14,6 +14,8 @@ export const useAuthForm = (formType: FormType = 'login') => {
         confirmPassword: '',
       },
     });
+    
+    return form;
   }
 
   if (formType === 'forgot-password') {

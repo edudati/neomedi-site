@@ -16,13 +16,8 @@ export const ProtectedRoute = ({
   const { isAuthenticated, user, isLoading } = useAuthContext();
   const location = useLocation();
 
-  console.log('🛡️ ProtectedRoute - isAuthenticated:', isAuthenticated);
-  console.log('🛡️ ProtectedRoute - isLoading:', isLoading);
-  console.log('🛡️ ProtectedRoute - user:', user);
-
   // Mostrar loading enquanto verifica autenticação
   if (isLoading) {
-    console.log('🛡️ ProtectedRoute - Mostrando loading...');
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
         <div className="spinner-border text-primary" role="status">
@@ -34,16 +29,13 @@ export const ProtectedRoute = ({
 
   // Se não está autenticado, redirecionar para login
   if (!isAuthenticated) {
-    console.log('🛡️ ProtectedRoute - Não autenticado, redirecionando para login...');
     return <Navigate to={fallbackPath} state={{ from: location }} replace />;
   }
 
   // Se requer role específica e usuário não tem, redirecionar
   if (requiredRole && user?.role !== requiredRole) {
-    console.log('🛡️ ProtectedRoute - Role não autorizada, redirecionando...');
     return <Navigate to="/unauthorized" replace />;
   }
 
-  console.log('🛡️ ProtectedRoute - Acesso autorizado, renderizando children...');
   return <>{children}</>;
 };

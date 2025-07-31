@@ -189,7 +189,6 @@ class AuthService {
 
   isAuthenticated(): boolean {
     const token = tokenStorage.getAccessToken();
-    console.log('🔑 Token encontrado:', !!token);
     
     if (!token) return false;
     
@@ -198,13 +197,9 @@ class AuthService {
       const currentTime = Date.now() / 1000;
       const isExpired = decoded.exp <= currentTime + 300; // 5 minutos de margem
       
-      console.log('⏰ Token expira em:', new Date(decoded.exp * 1000));
-      console.log('⏰ Tempo atual:', new Date(currentTime * 1000));
-      console.log('⏰ Está expirado:', isExpired);
-      
       return !isExpired;
     } catch (error) {
-      console.error('❌ Error decoding JWT token:', error);
+      console.error('Error decoding JWT token:', error);
       return false;
     }
   }

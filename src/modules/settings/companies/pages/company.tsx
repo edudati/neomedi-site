@@ -29,7 +29,9 @@ export const CompanyPage: React.FC = () => {
     city: '',
     state: '',
     zip_code: '',
-    country: 'Brasil'
+    country: 'Brasil',
+    latitude: 0,
+    longitude: 0
   });
 
   const queryClient = useQueryClient();
@@ -121,7 +123,9 @@ export const CompanyPage: React.FC = () => {
         city: company.address.city,
         state: company.address.state,
         zip_code: company.address.zip_code,
-        country: company.address.country
+        country: company.address.country,
+        latitude: company.address.latitude || 0,
+        longitude: company.address.longitude || 0
       });
     }
     setIsEditingAddress(true);
@@ -137,13 +141,21 @@ export const CompanyPage: React.FC = () => {
       city: '',
       state: '',
       zip_code: '',
-      country: 'Brasil'
+      country: 'Brasil',
+      latitude: 0,
+      longitude: 0
     });
   };
 
   const handleSaveAddress = () => {
     if (company) {
-      updateAddressMutation.mutate({ companyId: company.id, data: addressForm });
+      // Adicionar user_id e company_id baseado no contexto
+      const addressData = {
+        ...addressForm,
+        user_id: '', // Endereço da empresa, não do usuário
+        company_id: company.id // ID da empresa atual
+      };
+      updateAddressMutation.mutate({ companyId: company.id, data: addressData });
     }
   };
 
