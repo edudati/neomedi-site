@@ -84,14 +84,15 @@ export const AppHeader = () => {
 
           {/* Ações rápidas */}
           <div className="d-flex align-items-center gap-3 me-3">
-            <button
+            <Link
+              to="/clients"
               className="btn btn-outline-primary btn-sm"
               title="Adicionar cliente"
               aria-label="Adicionar novo cliente"
             >
               <i className="bi bi-person-plus-fill"></i>
               <span className="d-none d-md-inline ms-1">Cliente</span>
-            </button>
+            </Link>
             <button
               className="btn btn-outline-success btn-sm"
               title="Novo agendamento"
