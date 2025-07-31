@@ -14,6 +14,7 @@ import Dashboard from './modules/dashboard/pages/dashboard';
 import { MyProfilePage } from './modules/settings/users/pages/me';
 import { CompanyPage } from './modules/settings/companies/pages/company';
 import { PlacesPage } from './modules/settings/companies/pages/places';
+import { Patients } from './modules/patients';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -96,6 +97,18 @@ const AppContent = () => {
           }
         >
           <Route index element={<PlacesPage />} />
+        </Route>
+
+        {/* Rota dos pacientes */}
+        <Route
+          path="/clients"
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Patients />} />
         </Route>
         
         {/* Rota 404 */}
