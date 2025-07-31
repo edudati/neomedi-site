@@ -19,16 +19,30 @@ export interface UserAddress {
   country: string;
   latitude: number | null;
   longitude: number | null;
+  user_id: string;
+  company_id: string;
 }
+
+export interface SocialMedia {
+  [key: string]: any;
+}
+
+export type Gender = 'male' | 'female' | 'other' | 'undisclosed';
 
 export interface User {
   id: string;
-  auth_user_id: number;
   name: string;
   phone: string;
+  birth_date: string;
+  gender: Gender;
   is_active: boolean;
   is_verified: boolean;
+  has_access: boolean;
   role: string;
+  social_media: SocialMedia;
+  auth_user_id: number;
+  email: string;
+  profile_picture_url: string;
   is_deleted: boolean;
   suspended_at: string | null;
   created_at: string;
@@ -42,6 +56,14 @@ export type UserResponse = User;
 export interface UpdateUserRequest {
   name?: string;
   phone?: string;
+  birth_date?: string;
+  gender?: Gender;
+  is_active?: boolean;
+  is_verified?: boolean;
+  has_access?: boolean;
+  role?: string;
+  social_media?: SocialMedia;
+  suspended_at?: string;
 }
 
 export interface UpdateAddressRequest {
@@ -52,4 +74,9 @@ export interface UpdateAddressRequest {
   city?: string;
   state?: string;
   zip_code?: string;
+  country?: string;
+  latitude?: number;
+  longitude?: number;
+  user_id?: string;
+  company_id?: string;
 }

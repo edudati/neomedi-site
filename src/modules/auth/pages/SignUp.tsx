@@ -16,6 +16,7 @@ const SignUp = () => {
   const form = useAuthForm('signup') as UseFormReturn<SignUpFormData>;
 
   const onSubmit = async (data: SignUpFormData) => {
+    console.log('Formulário submetido:', data);
     try {
       const result = await signUp({
         email: data.email,
@@ -30,6 +31,7 @@ const SignUp = () => {
         showError(result.message);
       }
     } catch (error) {
+      console.error('Erro no signup:', error);
       showError('Erro ao fazer cadastro');
     }
   };
@@ -57,10 +59,10 @@ const SignUp = () => {
     >
       {/* Formulário */}
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} method="POST">
           <SignUpForm />
           
-          {/* Loading state */}
+          {/* Loading state no botão */}
           {isLoading && (
             <div className="text-center mt-3">
               <div className="spinner-border text-primary" role="status">

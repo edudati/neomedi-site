@@ -66,12 +66,14 @@ export const AppHeader = () => {
                 Pacientes
               </Link>
             </li>
-            <li className="nav-item">
-              <Link to="/professionals" className="nav-link">
-                <i className="bi bi-person-video3 me-1"></i>
-                Profissionais
-              </Link>
-            </li>
+            {user?.role === 'professional' && (
+              <li className="nav-item">
+                <Link to="/places" className="nav-link">
+                  <i className="bi bi-geo-alt me-1"></i>
+                  Locais
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <Link to="/settings" className="nav-link">
                 <i className="bi bi-gear me-1"></i>
