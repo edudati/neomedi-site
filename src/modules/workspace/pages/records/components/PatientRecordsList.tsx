@@ -115,6 +115,8 @@ const CenterPaneHeader = ({ onRefresh }: CenterPaneHeaderProps) => {
         </div>
       </div>
 
+
+
       <div className="text-end mt-1">
         <small className="text-muted" style={{ fontSize: '0.65rem' }}>
           Criado em {new Date(recordData.created_at).toLocaleDateString('pt-BR')} | 

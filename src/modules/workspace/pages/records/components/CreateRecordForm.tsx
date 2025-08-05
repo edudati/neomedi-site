@@ -63,10 +63,6 @@ const CreateRecordForm = ({ onClose, onSuccess }: CreateRecordFormProps) => {
         company_id: companyId
       };
 
-      console.log('📤 Dados sendo enviados para API:', recordData);
-      console.log('🏥 Company ID:', companyId);
-      console.log('🤒 Patient ID:', patientId);
-
       await api.post('/records/', recordData);
       onSuccess();
     } catch (error) {
