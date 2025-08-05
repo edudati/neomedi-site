@@ -1,5 +1,26 @@
 export interface PatientUser {
-  [key: string]: any;
+  name: string;
+  phone: string;
+  birth_date: string;
+  gender: "male" | "female";
+  is_active: boolean;
+  is_verified: boolean;
+  has_access: boolean;
+  role: "client";
+  social_media: {
+    [key: string]: any;
+  };
+  id: string;
+  auth_user_id: number;
+  email: string;
+  picture: string;
+  is_deleted: boolean;
+  suspended_at: string | null;
+  created_at: string;
+  updated_at: string;
+  auth_user: {
+    [key: string]: any;
+  };
 }
 
 export interface PatientAddress {

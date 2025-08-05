@@ -6,7 +6,7 @@ interface PatientCardProps {
   phone: string;
   email: string;
   age: string;
-  lastVisit: string;
+  lastVisit?: string;
   avatarUrl?: string;
   tags?: string[];
 }
@@ -31,9 +31,11 @@ const PatientCard: React.FC<PatientCardProps> = ({
           <div className={styles.ageSection}>
             <i className="bi bi-calendar3 me-1" /> {age}
           </div>
-          <div className={styles.lastVisitSection}>
-            <i className="bi bi-journal-text me-1" /> {lastVisit}
-          </div>
+          {lastVisit && (
+            <div className={styles.lastVisitSection}>
+              <i className="bi bi-journal-text me-1" /> {lastVisit}
+            </div>
+          )}
           <div className={styles.contactSection}>
             <i className="bi bi-envelope-fill me-1" /> {email}
           </div>

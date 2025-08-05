@@ -1,7 +1,12 @@
 import React from "react";
 import styles from "./SearchBox.module.css";
 
-const SearchBox: React.FC = () => {
+interface SearchBoxProps {
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
+}
+
+const SearchBox = ({ searchTerm, onSearchChange }: SearchBoxProps) => {
   return (
     <div className={styles.container}>
       <label className={styles.label}>Encontre o Prontuário</label>
@@ -10,6 +15,8 @@ const SearchBox: React.FC = () => {
           type="text"
           placeholder="Digite o nome do paciente"
           className={styles.input}
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
         />
         <button className={styles.button} aria-label="Buscar">
           <i className="bi bi-search" />

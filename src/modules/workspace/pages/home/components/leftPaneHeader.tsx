@@ -1,11 +1,14 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import UserDropdown from "../../../components/UserDropdown"; 
 import PatientButton from "../../../components/PatientButton";
 import RecordsButton from "../../../components/RecordsButton";
 import styles from "../index.module.css";
 
-const LeftPaneHeader: React.FC = () => {
+interface LeftPaneHeaderProps {
+  onAddPatient?: () => void;
+}
+
+const LeftPaneHeader = ({ onAddPatient }: LeftPaneHeaderProps) => {
   return (
     <div className={styles.leftPaneHeader}>
       {/* Logo */}
@@ -23,7 +26,7 @@ const LeftPaneHeader: React.FC = () => {
       <div className={styles.buttonsContainer}>
         <UserDropdown />
         <RecordsButton />
-        <PatientButton />
+        <PatientButton onClick={onAddPatient} />
       </div>
     </div>
   );

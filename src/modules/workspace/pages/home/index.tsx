@@ -1,13 +1,36 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styles from "./index.module.css";
 import LeftPaneHeader from "./components/leftPaneHeader";
 import SearchBox from "./components/SearchBox";
-import PatientCard from "./components/patientCard";
+import PatientCard from "./components/PatientCard";
+import CreatePatientModal from "./components/CreatePatientModal";
+import { usePatients } from "../../../patients/hooks/usePatients";
+import { formatAge } from "../../../patients/utils/dateUtils";
+import type { CreatePatientFormData } from "../../../patients/types/patient.types";
 
 const WorkspaceHome = () => {
   // VALOR INICIAL: Largura inicial do painel central (cinza) em rem
   const [centerWidth, setCenterWidth] = useState(50); 
   const [isResizing, setIsResizing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { patients, loading, error, createPatient } = usePatients();
+
+  // Filtrar pacientes baseado no termo de pesquisa
+  const filteredPatients = useMemo(() => {
+    if (!searchTerm.trim()) return patients;
+    
+    return patients.filter(patient =>
+      patient.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [patients, searchTerm]);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleCreatePatient = async (formData: CreatePatientFormData) => {
+    await createPatient(formData);
+  };
 
   const startResizing = () => setIsResizing(true);
 
@@ -35,40 +58,28 @@ const WorkspaceHome = () => {
   return (
     <div className={`${styles.container} workspace-container`}>
       <div className={styles.leftPane}>
-        <LeftPaneHeader />
+        <LeftPaneHeader onAddPatient={handleOpenModal} />
       </div>
 
       <div className={styles.centerPane} style={{ width: `${centerWidth}rem` }}>
-        <SearchBox />
+        <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         
-        {/* Lista de pacientes - apenas para visualização */}
+        {/* Lista de pacientes */}
         <div className={styles.patientsList}>
-          <PatientCard
-            name="Maria Silva"
-            phone="(11) 99999-8888"
-            email="maria.silva@email.com"
-            age="32 anos"
-            lastVisit="15/01/2024"
-            tags={["Ativo", "Retorno"]}
-          />
-          
-          <PatientCard
-            name="João Santos"
-            phone="(11) 88888-7777"
-            email="joao.santos@email.com"
-            age="45 anos"
-            lastVisit="10/01/2024"
-            tags={["Ativo"]}
-          />
-          
-          <PatientCard
-            name="Ana Costa"
-            phone="(11) 77777-6666"
-            email="ana.costa@email.com"
-            age="28 anos"
-            lastVisit="08/01/2024"
-            tags={["Ativo", "Primeira Consulta"]}
-          />
+          {loading && <div>Carregando pacientes...</div>}
+          {error && <div style={{ color: 'red' }}>Erro: {error}</div>}
+          {!loading && !error && filteredPatients.length === 0 && searchTerm.trim() && (
+            <div>Nenhum paciente encontrado com o nome "{searchTerm}"</div>
+          )}
+          {!loading && !error && filteredPatients.map((patient) => (
+            <PatientCard
+              key={patient.user_id}
+              name={patient.user.name}
+              phone={patient.user.phone}
+              email={patient.user.email}
+              age={formatAge(patient.user.birth_date)}
+            />
+          ))}
         </div>
       </div>
 
@@ -78,6 +89,13 @@ const WorkspaceHome = () => {
       />
 
       <div className={styles.rightPane} />
+
+      <CreatePatientModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleCreatePatient}
+        loading={loading}
+      />
     </div>
   );
 };
