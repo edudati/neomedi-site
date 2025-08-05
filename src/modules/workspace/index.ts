@@ -1,4 +1,5 @@
 export { default as WorkspaceHome } from './pages/home';
+export { default as WorkspaceRecords } from './pages/records';
 export { default as WorkspaceLayout } from './layouts/WorkspaceLayout';
 export { default as UserDropdown } from './components/UserDropdown';
 export { default as PatientButton } from './components/PatientButton';

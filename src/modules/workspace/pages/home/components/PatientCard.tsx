@@ -9,6 +9,7 @@ interface PatientCardProps {
   lastVisit?: string;
   avatarUrl?: string;
   tags?: string[];
+  onClick?: () => void;
 }
 
 const PatientCard: React.FC<PatientCardProps> = ({
@@ -17,11 +18,12 @@ const PatientCard: React.FC<PatientCardProps> = ({
   email,
   age,
   lastVisit,
-  avatarUrl,
-  tags = [],
+  avatarUrl: _avatarUrl,
+  tags: _tags = [],
+  onClick,
 }) => {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={onClick}>
       {/* Informações em uma linha */}
       <div className={styles.info}>
         <div className={styles.row}>
