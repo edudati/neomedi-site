@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./index.module.css";
 import LeftPaneHeader from "./components/leftPaneHeader";
 import SearchBox from "./components/SearchBox";
@@ -15,6 +16,7 @@ const WorkspaceHome = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { patients, loading, error, createPatient } = usePatients();
+  const navigate = useNavigate();
 
   // Filtrar pacientes baseado no termo de pesquisa
   const filteredPatients = useMemo(() => {
@@ -30,6 +32,10 @@ const WorkspaceHome = () => {
 
   const handleCreatePatient = async (formData: CreatePatientFormData) => {
     await createPatient(formData);
+  };
+
+  const handlePatientClick = (patientId: string) => {
+    navigate(`/workspace/records/${patientId}`);
   };
 
   const startResizing = () => setIsResizing(true);
@@ -78,6 +84,7 @@ const WorkspaceHome = () => {
               phone={patient.user.phone}
               email={patient.user.email}
               age={formatAge(patient.user.birth_date)}
+              onClick={() => handlePatientClick(patient.user_id)}
             />
           ))}
         </div>

@@ -110,6 +110,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSubmit, loading }: CreatePatien
               onChange={(e) => handleInputChange("name", e.target.value)}
               className={errors.name ? styles.error : ""}
               disabled={loading}
+              style={{ backgroundColor: '#fff' }}
             />
             {errors.name && <span className={styles.errorText}>{errors.name}</span>}
           </div>
@@ -123,6 +124,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSubmit, loading }: CreatePatien
               onChange={(e) => handleInputChange("email", e.target.value)}
               className={errors.email ? styles.error : ""}
               disabled={loading}
+              style={{ backgroundColor: '#fff' }}
             />
             {errors.email && <span className={styles.errorText}>{errors.email}</span>}
           </div>
@@ -136,6 +138,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSubmit, loading }: CreatePatien
               onChange={(e) => handleInputChange("password", e.target.value)}
               className={errors.password ? styles.error : ""}
               disabled={loading}
+              style={{ backgroundColor: '#fff' }}
             />
             {errors.password && <span className={styles.errorText}>{errors.password}</span>}
           </div>
@@ -149,6 +152,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSubmit, loading }: CreatePatien
               onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
               className={errors.confirmPassword ? styles.error : ""}
               disabled={loading}
+              style={{ backgroundColor: '#fff' }}
             />
             {errors.confirmPassword && <span className={styles.errorText}>{errors.confirmPassword}</span>}
           </div>

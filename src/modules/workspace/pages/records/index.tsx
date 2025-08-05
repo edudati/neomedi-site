@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./index.module.css";
-import LeftPaneHeader from "./components/leftPaneHeader";
-import SearchBox from "./components/SearchBox";
-import PatientCard from "./components/patientCard";
+import RecordsLeftPaneHeader from "./components/RecordsLeftPaneHeader";
+import CreateRecordForm from "./components/CreateRecordForm";
+import PatientRecordsList from "./components/PatientRecordsList";
+import AIChat from "./components/AIChat";
 
-const WorkspaceHome = () => {
+const WorkspaceRecords = () => {
   // VALOR INICIAL: Largura inicial do painel central (cinza) em rem
   const [centerWidth, setCenterWidth] = useState(50); 
   const [isResizing, setIsResizing] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [refreshRecords, setRefreshRecords] = useState<(() => void) | null>(null);
 
   const startResizing = () => setIsResizing(true);
 
@@ -35,41 +38,24 @@ const WorkspaceHome = () => {
   return (
     <div className={`${styles.container} workspace-container`}>
       <div className={styles.leftPane}>
-        <LeftPaneHeader />
+        <RecordsLeftPaneHeader onAddRecord={() => setShowCreateForm(true)} />
       </div>
 
       <div className={styles.centerPane} style={{ width: `${centerWidth}rem` }}>
-        <SearchBox />
-        
-        {/* Lista de pacientes - apenas para visualização */}
-        <div className={styles.patientsList}>
-          <PatientCard
-            name="Maria Silva"
-            phone="(11) 99999-8888"
-            email="maria.silva@email.com"
-            age="32 anos"
-            lastVisit="15/01/2024"
-            tags={["Ativo", "Retorno"]}
+        {showCreateForm ? (
+          <CreateRecordForm 
+            onClose={() => setShowCreateForm(false)}
+            onSuccess={() => {
+              setShowCreateForm(false);
+              // Recarregar lista após criar record
+              if (refreshRecords) {
+                refreshRecords();
+              }
+            }}
           />
-          
-          <PatientCard
-            name="João Santos"
-            phone="(11) 88888-7777"
-            email="joao.santos@email.com"
-            age="45 anos"
-            lastVisit="10/01/2024"
-            tags={["Ativo"]}
-          />
-          
-          <PatientCard
-            name="Ana Costa"
-            phone="(11) 77777-6666"
-            email="ana.costa@email.com"
-            age="28 anos"
-            lastVisit="08/01/2024"
-            tags={["Ativo", "Primeira Consulta"]}
-          />
-        </div>
+        ) : (
+          <PatientRecordsList onRefresh={setRefreshRecords} />
+        )}
       </div>
 
       <div
@@ -77,9 +63,11 @@ const WorkspaceHome = () => {
         onMouseDown={startResizing}
       />
 
-      <div className={styles.rightPane} />
+      <div className={styles.rightPane}>
+        <AIChat />
+      </div>
     </div>
   );
 };
 
-export default WorkspaceHome;
+export default WorkspaceRecords;

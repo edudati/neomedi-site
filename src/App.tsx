@@ -15,7 +15,7 @@ import { MyProfilePage } from './modules/settings/users/pages/me';
 import { CompanyPage } from './modules/settings/companies/pages/company';
 import { PlacesPage } from './modules/settings/companies/pages/places';
 import { Patients } from './modules/patients';
-import { WorkspaceHome, WorkspaceLayout } from './modules/workspace';
+import { WorkspaceHome, WorkspaceRecords, WorkspaceLayout } from './modules/workspace';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -74,6 +74,7 @@ const AppContent = () => {
           } 
         >
           <Route index element={<WorkspaceHome />} />
+          <Route path="records/:id" element={<WorkspaceRecords />} />
         </Route>
 
         {/* Rota do perfil */}
