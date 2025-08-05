@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./index.module.css";
 import RecordsLeftPaneHeader from "./components/RecordsLeftPaneHeader";
 import CreateRecordForm from "./components/CreateRecordForm";
-import PatientRecordsList from "./components/PatientRecordsList";
+import CenterPaneHeader from "./components/PatientRecordsList";
 import AIChat from "./components/AIChat";
 
 const WorkspaceRecords = () => {
@@ -53,9 +53,9 @@ const WorkspaceRecords = () => {
               }
             }}
           />
-        ) : (
-          <PatientRecordsList onRefresh={setRefreshRecords} />
-        )}
+                       ) : (
+                 <CenterPaneHeader onRefresh={setRefreshRecords} />
+               )}
       </div>
 
       <div

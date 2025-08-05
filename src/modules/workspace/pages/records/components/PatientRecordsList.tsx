@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../../../shared/services/api";
 
-interface RecordItem {
+interface RecordData {
   id: string;
   allergies: string;
   clinical_history: string;
@@ -19,44 +19,42 @@ interface RecordItem {
   updated_at: string;
 }
 
-interface PatientRecordsListProps {
+interface CenterPaneHeaderProps {
   onRefresh?: (refreshFn: () => void) => void;
 }
 
-const PatientRecordsList = ({ onRefresh }: PatientRecordsListProps) => {
+const CenterPaneHeader = ({ onRefresh }: CenterPaneHeaderProps) => {
   const { id: patientId } = useParams();
-  const [records, setRecords] = useState<RecordItem[]>([]);
+  const [recordData, setRecordData] = useState<RecordData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchRecords = useCallback(async () => {
+  const fetchRecord = useCallback(async () => {
     if (!patientId) return;
 
     try {
       setLoading(true);
-      console.log('🔍 Buscando records para patient_id:', patientId);
-      // GET /records/patient/{patient_id}?skip=0&limit=100
-      const response = await api.get(`/records/patient/${patientId}?skip=0&limit=100`);
-      setRecords(response.data);
-      console.log('📋 Records do paciente:', response.data);
+      console.log('🔍 Buscando record para patient_id:', patientId);
+      const response = await api.get(`/records/patient/${patientId}`);
+      setRecordData(response.data);
+      console.log('📋 Record do paciente:', response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar prontuários');
-      console.error('Erro ao buscar records:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao carregar prontuário');
+      console.error('Erro ao buscar record:', err);
     } finally {
       setLoading(false);
     }
   }, [patientId]);
 
   useEffect(() => {
-    fetchRecords();
-  }, [fetchRecords]);
+    fetchRecord();
+  }, [fetchRecord]);
 
-  // Expor função de refresh para o componente pai
   useEffect(() => {
     if (onRefresh) {
-      onRefresh(fetchRecords);
+      onRefresh(fetchRecord);
     }
-  }, [onRefresh, fetchRecords]);
+  }, [onRefresh, fetchRecord]);
 
   if (loading) {
     return (
@@ -71,85 +69,60 @@ const PatientRecordsList = ({ onRefresh }: PatientRecordsListProps) => {
   if (error) {
     return (
       <div className="alert alert-danger m-3">
-        <h5>Erro ao carregar prontuários</h5>
+        <h5>Erro ao carregar prontuário</h5>
         <p>{error}</p>
       </div>
     );
   }
 
-  if (records.length === 0) {
+  if (!recordData) {
     return (
       <div className="text-center m-4">
         <i className="bi bi-file-earmark-text text-muted" style={{ fontSize: '3rem' }}></i>
         <h5 className="text-muted mt-3">Nenhum prontuário encontrado</h5>
-        <p className="text-muted">Este paciente ainda não possui prontuários.</p>
+        <p className="text-muted">Este paciente ainda não possui prontuário.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Prontuários do Paciente</h4>
-        <span className="badge bg-primary">{records.length} prontuário(s)</span>
+    <div className="p-1">
+      <div className="d-flex justify-content-between align-items-center mb-1">
+        <h6 className="mb-0">Prontuário do Paciente</h6>
+        <div>
+          {recordData.tags.map((tag, index) => (
+            <span key={index} className="badge bg-primary me-1" style={{ fontSize: '0.6rem' }}>
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div className="row">
-        {records.map((record) => (
-          <div key={record.id} className="col-12 mb-3">
-            <div className="card">
-              <div className="card-header d-flex justify-content-between align-items-center">
-                <h6 className="mb-0">
-                  <i className="bi bi-file-earmark-text me-2"></i>
-                  Prontuário - {new Date(record.created_at).toLocaleDateString('pt-BR')}
-                </h6>
-                <div>
-                  {record.tags.map((tag, index) => (
-                    <span key={index} className="badge bg-secondary me-1">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="card-body">
-                <div className="row">
-                  {record.last_diagnoses && (
-                    <div className="col-md-6 mb-2">
-                      <strong>Último Diagnóstico:</strong>
-                      <p className="text-muted small mb-1">{record.last_diagnoses}</p>
-                    </div>
-                  )}
-                  {record.current_medications && (
-                    <div className="col-md-6 mb-2">
-                      <strong>Medicações Atuais:</strong>
-                      <p className="text-muted small mb-1">{record.current_medications}</p>
-                    </div>
-                  )}
-                  {record.allergies && (
-                    <div className="col-md-6 mb-2">
-                      <strong>Alergias:</strong>
-                      <p className="text-muted small mb-1">{record.allergies}</p>
-                    </div>
-                  )}
-                  {record.habits && (
-                    <div className="col-md-6 mb-2">
-                      <strong>Hábitos:</strong>
-                      <p className="text-muted small mb-1">{record.habits}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="text-end">
-                  <small className="text-muted">
-                    Atualizado em {new Date(record.updated_at).toLocaleDateString('pt-BR')}
-                  </small>
-                </div>
-              </div>
+      <div className="row g-1">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm" style={{ minHeight: '60px' }}>
+            <div className="card-header py-1" style={{ backgroundColor: '#f8f9fa' }}>
+              <h6 className="mb-0" style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>
+                Diagnóstico
+              </h6>
+            </div>
+            <div className="card-body py-1">
+              <p className="card-text small mb-0" style={{ fontSize: '0.7rem', color: '#6c757d' }}>
+                {recordData.last_diagnoses || 'Inserir informação'}
+              </p>
             </div>
           </div>
-        ))}
+        </div>
+      </div>
+
+      <div className="text-end mt-1">
+        <small className="text-muted" style={{ fontSize: '0.65rem' }}>
+          Criado em {new Date(recordData.created_at).toLocaleDateString('pt-BR')} | 
+          Atualizado em {new Date(recordData.updated_at).toLocaleDateString('pt-BR')}
+        </small>
       </div>
     </div>
   );
 };
 
-export default PatientRecordsList;
+export default CenterPaneHeader;
