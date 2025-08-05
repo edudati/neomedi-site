@@ -6,7 +6,7 @@ export interface DangerButtonProps extends Omit<BaseButtonProps, 'variant'> {
   children: React.ReactNode;
 }
 
-const DangerButton: React.FC<DangerButtonProps> = ({ 
+const DangerButton = ({ 
   children, 
   ...props 
 }) => {

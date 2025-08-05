@@ -26,7 +26,7 @@ const SignUp = () => {
       if (result.success) {
         showSuccess(result.message);
         // Redirecionamento imediato após signup bem-sucedido
-        navigate('/dashboard');
+        navigate('/workspace');
       } else {
         showError(result.message);
       }
@@ -43,7 +43,7 @@ const SignUp = () => {
       if (result.success) {
         showSuccess(result.message);
         // Redirecionamento imediato após signup bem-sucedido
-        navigate('/dashboard');
+        navigate('/workspace');
       } else {
         showError(result.message);
       }

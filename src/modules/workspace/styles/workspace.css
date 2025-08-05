@@ -1,0 +1,35 @@
+/* Reset específico para o workspace */
+.workspace-layout {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100vh !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.workspace-layout * {
+  box-sizing: border-box;
+}
+
+/* Garantir que o container do workspace ocupe toda a tela */
+.workspace-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100vh !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  z-index: 1;
+}
+
+/* Prevenir scroll no body quando estiver no workspace */
+body.workspace-active {
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+} 

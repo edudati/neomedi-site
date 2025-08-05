@@ -4,7 +4,7 @@ interface AppFooterProps {
   children?: React.ReactNode;
 }
 
-const AppFooter: React.FC<AppFooterProps> = ({ children }) => {
+const AppFooter = ({ children }: AppFooterProps) => {
   return (
     <footer 
       className="bg-white border-top shadow-sm"

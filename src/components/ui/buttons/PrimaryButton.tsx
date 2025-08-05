@@ -6,7 +6,7 @@ export interface PrimaryButtonProps extends Omit<BaseButtonProps, 'variant'> {
   children: React.ReactNode;
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ 
+const PrimaryButton = ({ 
   children, 
   ...props 
 }) => {

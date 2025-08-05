@@ -10,13 +10,7 @@ const PatientDashboardHeader: React.FC<PatientDashboardHeaderProps> = ({ childre
       className="border-bottom shadow-sm"
       style={{ 
         height: '4rem', 
-        width: '100%',
         backgroundColor: '#f8f9fa', // Cinza claro
-        position: 'fixed',
-        top: '4rem', // Logo abaixo do AppHeader
-        left: '16rem', // Posicionado à direita do SideBar
-        right: 0, // Até o fim da tela
-        zIndex: 1020,
         overflow: 'hidden' // Evita que o conteúdo saia da tela
       }}
     >

@@ -1,0 +1,67 @@
+.card {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  
+  
+  .info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nameSection {
+  font-weight: 600;
+}
+
+.ageSection {
+  color: #666;
+}
+
+.lastVisitSection {
+  color: #666;
+}
+
+.contactSection {
+  color: #666;
+}
+
+.phoneSection {
+  color: #666;
+}
+  
+  
+  
+  /* Responsividade */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info {
+    width: 100%;
+  }
+}
+  
