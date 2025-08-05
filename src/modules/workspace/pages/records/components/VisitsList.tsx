@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { visitService, Visit } from "../services/visitService";
+import { visitService } from "../services/visitService";
+import type { Visit } from "../services/visitService";
 
 interface VisitsListProps {
   onRefresh?: (refreshFn: () => void) => void;
@@ -17,14 +18,15 @@ const VisitsList = ({ onRefresh }: VisitsListProps) => {
 
     try {
       setLoading(true);
-      console.log('🔍 Patient ID:', patientId);
+      setError(null); // Limpar erros anteriores
+      console.log('🔄 VisitsList: Buscando visitas para patientId:', patientId);
       
       const response = await visitService.getVisitsByPatient(patientId);
       setVisits(response);
-      console.log('📋 Visitas encontradas:', response);
+      console.log('📋 VisitsList: Visitas encontradas:', response.length);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao carregar visitas');
-      console.error('Erro ao buscar visitas:', err);
+      console.error('❌ VisitsList: Erro ao buscar visitas:', err);
     } finally {
       setLoading(false);
     }
@@ -36,6 +38,7 @@ const VisitsList = ({ onRefresh }: VisitsListProps) => {
 
   useEffect(() => {
     if (onRefresh) {
+      console.log('🔗 VisitsList: Registrando função de refresh');
       onRefresh(fetchVisits);
     }
   }, [onRefresh, fetchVisits]);

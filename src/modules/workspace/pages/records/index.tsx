@@ -66,7 +66,19 @@ const WorkspaceRecords = () => {
       
       // Recarregar lista de visitas após criar novo atendimento
       if (refreshVisits) {
-        refreshVisits();
+        console.log("🔄 Recarregando lista de visitas...");
+        console.log("🔍 Tipo da função refreshVisits:", typeof refreshVisits);
+        // Pequeno delay para garantir que a API processou o registro
+        setTimeout(() => {
+          try {
+            refreshVisits();
+            console.log("✅ Lista de visitas recarregada!");
+          } catch (error) {
+            console.error("❌ Erro ao recarregar lista:", error);
+          }
+        }, 500);
+      } else {
+        console.log("⚠️ refreshVisits não está disponível");
       }
       
       // Fechar modal
@@ -115,7 +127,10 @@ const WorkspaceRecords = () => {
           <>
             <CenterPaneHeader onRefresh={setRefreshRecords} />
             <div className="mt-2">
-              <VisitsList onRefresh={setRefreshVisits} />
+              <VisitsList onRefresh={(refreshFn) => {
+                console.log("🔗 Registrando função de refresh das visitas");
+                setRefreshVisits(() => refreshFn);
+              }} />
             </div>
           </>
         )}
