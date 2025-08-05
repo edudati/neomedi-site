@@ -6,7 +6,7 @@ export interface SuccessButtonProps extends Omit<BaseButtonProps, 'variant'> {
   children: React.ReactNode;
 }
 
-const SuccessButton: React.FC<SuccessButtonProps> = ({ 
+const SuccessButton = ({ 
   children, 
   ...props 
 }) => {

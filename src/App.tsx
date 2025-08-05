@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuthContext } from './modules/auth/context/AuthContext';
@@ -15,6 +15,7 @@ import { MyProfilePage } from './modules/settings/users/pages/me';
 import { CompanyPage } from './modules/settings/companies/pages/company';
 import { PlacesPage } from './modules/settings/companies/pages/places';
 import { Patients } from './modules/patients';
+import { WorkspaceHome, WorkspaceLayout } from './modules/workspace';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -61,6 +62,18 @@ const AppContent = () => {
           } 
         >
           <Route index element={<Dashboard />} />
+        </Route>
+
+        {/* Rota do Workspace */}
+        <Route 
+          path="/workspace" 
+          element={
+            <ProtectedRoute>
+              <WorkspaceLayout />
+            </ProtectedRoute>
+          } 
+        >
+          <Route index element={<WorkspaceHome />} />
         </Route>
 
         {/* Rota do perfil */}
@@ -112,7 +125,7 @@ const AppContent = () => {
         </Route>
         
         {/* Rota 404 */}
-        <Route path="*" element={<Login />} />
+        <Route path="*" element={<Navigate to="/workspace" replace />} />
       </Routes>
       <ToastContainer />
     </div>

@@ -15,7 +15,7 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     // Verifica se há um tema salvo no localStorage
     const savedTheme = localStorage.getItem('neomedi-theme') as Theme;

@@ -25,7 +25,7 @@ const Login = () => {
       if (result.success) {
         showSuccess(result.message);
         // Redirecionamento imediato após login bem-sucedido
-        navigate('/dashboard');
+        navigate('/workspace');
       } else {
         showError(result.message);
       }
@@ -41,7 +41,7 @@ const Login = () => {
       if (result.success) {
         showSuccess(result.message);
         // Redirecionamento imediato após login bem-sucedido
-        navigate('/dashboard');
+        navigate('/workspace');
       } else {
         showError(result.message);
       }

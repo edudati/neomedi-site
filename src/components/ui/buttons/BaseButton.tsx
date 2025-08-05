@@ -10,7 +10,7 @@ export interface BaseButtonProps extends Omit<BootstrapButtonProps, 'size'> {
   children: React.ReactNode;
 }
 
-const BaseButton: React.FC<BaseButtonProps> = ({
+const BaseButton = ({
   size = 'md',
   variant = 'primary',
   fullWidth = false,

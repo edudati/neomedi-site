@@ -6,7 +6,7 @@ export interface SecondaryButtonProps extends Omit<BaseButtonProps, 'variant'> {
   children: React.ReactNode;
 }
 
-const SecondaryButton: React.FC<SecondaryButtonProps> = ({ 
+const SecondaryButton = ({ 
   children, 
   ...props 
 }) => {

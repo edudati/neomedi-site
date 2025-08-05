@@ -27,6 +27,15 @@ html {
   min-height: 100vh;
 }
 
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #fff !important;
+  box-sizing: border-box;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
