@@ -11,7 +11,7 @@ import SignUp from './modules/auth/pages/SignUp';
 import ForgotPassword from './modules/auth/pages/ForgotPassword';
 import Unauthorized from './modules/auth/pages/Unauthorized';
 import Dashboard from './modules/dashboard/pages/dashboard';
-import { MyProfilePage } from './modules/settings/users/pages/me';
+
 import { CompanyPage } from './modules/settings/companies/pages/company';
 import { PlacesPage } from './modules/settings/companies/pages/places';
 import { Patients } from './modules/patients';
@@ -77,17 +77,7 @@ const AppContent = () => {
           <Route path="records/:id" element={<WorkspaceRecords />} />
         </Route>
 
-        {/* Rota do perfil */}
-        <Route
-          path="/me"
-          element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<MyProfilePage />} />
-        </Route>
+
 
         {/* Rota da empresa */}
         <Route

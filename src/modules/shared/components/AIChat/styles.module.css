@@ -70,6 +70,32 @@
   color: #495057;
 }
 
+/* Tag Cloud */
+.tagCloud {
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+  background-color: #fff;
+}
+
+.tag {
+  background: #e9ecef;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: #dee2e6;
+  color: #212529;
+}
+
 /* Área de Mensagens */
 .messagesArea {
   flex: 1;
@@ -190,6 +216,7 @@
   min-height: 40px;
   max-height: 120px;
   transition: border-color 0.2s ease;
+  background-color: #fff;
 }
 
 .messageInput:focus {

@@ -84,12 +84,6 @@ export const AppHeader = () => {
               </li>
               <li><hr className="dropdown-divider" /></li>
               <li>
-                <Link className="dropdown-item" to="/account">
-                  <i className="bi bi-person-gear me-2"></i>
-                  Minha Conta
-                </Link>
-              </li>
-              <li>
                 <Link className="dropdown-item" to="/me">
                   <i className="bi bi-person-circle me-2"></i>
                   Meu Perfil

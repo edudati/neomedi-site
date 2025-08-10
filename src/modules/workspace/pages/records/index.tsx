@@ -5,7 +5,7 @@ import CreateRecordForm from "./components/CreateRecordForm";
 import CreateVisitModal from "./components/CreateVisitModal";
 import CenterPaneHeader from "./components/PatientRecordsList";
 import VisitsList from "./components/VisitsList";
-import AIChat from "./components/AIChat";
+import RecordAIChat from "./components/AIChat";
 import { visitService } from "./services/visitService";
 import { useParams } from "react-router-dom";
 import { api } from "../../../shared/services/api";
@@ -155,7 +155,7 @@ const WorkspaceRecords = () => {
       />
 
       <div className={styles.rightPane}>
-        <AIChat />
+        <RecordAIChat />
       </div>
 
                                                                                                                {patientId && (
