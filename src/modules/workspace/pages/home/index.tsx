@@ -5,6 +5,7 @@ import LeftPaneHeader from "./components/leftPaneHeader";
 import SearchBox from "./components/SearchBox";
 import PatientCard from "./components/PatientCard";
 import CreatePatientModal from "./components/CreatePatientModal";
+import WorkspaceAIChat from "../../components/WorkspaceAIChat";
 import { usePatients } from "../../../patients/hooks/usePatients";
 import { formatAge } from "../../../patients/utils/dateUtils";
 import type { CreatePatientFormData } from "../../../patients/types/patient.types";
@@ -95,7 +96,9 @@ const WorkspaceHome = () => {
         onMouseDown={startResizing}
       />
 
-      <div className={styles.rightPane} />
+      <div className={styles.rightPane}>
+        <WorkspaceAIChat />
+      </div>
 
       <CreatePatientModal
         isOpen={isModalOpen}
