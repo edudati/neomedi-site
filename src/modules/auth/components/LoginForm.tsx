@@ -10,7 +10,7 @@ export const LoginForm = () => {
   } = useFormContext<LoginFormData>();
 
   return (
-    <div style={{ minWidth: '400px', fontSize: '16px' }}>
+    <div style={{ fontSize: '16px' }}>
       <div className="mb-4">
         <label htmlFor="email" className="form-label text-secondary text-start w-100">
           Email

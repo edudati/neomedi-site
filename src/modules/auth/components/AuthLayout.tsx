@@ -18,8 +18,8 @@ export const AuthLayout = ({
   return (
     <div className="min-vh-100 d-flex align-items-center">
       <div className="container-fluid">
-        <div className="row">
-          <div className="col-12" style={{ maxWidth: '1800px', margin: '0 auto', padding: '0 24px' }}>
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-5" style={{ maxWidth: '500px' }}>
             <div className="bg-white rounded shadow-sm p-4">
               <div className="text-center mb-4">
                 <Link
