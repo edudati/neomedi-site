@@ -23,9 +23,10 @@ interface CenterPaneHeaderProps {
   onRefresh?: (refreshFn: () => void) => void;
   onAddRecord?: () => void;
   onRecordStatusChange?: (hasRecord: boolean) => void;
+  visitsCount?: number;
 }
 
-const CenterPaneHeader = ({ onRefresh, onAddRecord, onRecordStatusChange }: CenterPaneHeaderProps) => {
+const CenterPaneHeader = ({ onRefresh, onAddRecord, onRecordStatusChange, visitsCount = 0 }: CenterPaneHeaderProps) => {
   const { id: patientId } = useParams();
   const [recordData, setRecordData] = useState<RecordData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -102,30 +103,13 @@ const CenterPaneHeader = ({ onRefresh, onAddRecord, onRecordStatusChange }: Cent
   return (
     <div className="p-1">
       <div className="d-flex justify-content-between align-items-center mb-1">
-        <h6 className="mb-0">Prontuário do Paciente</h6>
+        <h6 className="mb-0">Histórico de Atendimentos ({visitsCount})</h6>
         <div>
           {recordData.tags.map((tag, index) => (
             <span key={index} className="badge bg-primary me-1" style={{ fontSize: '0.6rem' }}>
               {tag}
             </span>
           ))}
-        </div>
-      </div>
-
-      <div className="row g-1">
-        <div className="col-12">
-          <div className="card border-0 shadow-sm" style={{ minHeight: '60px' }}>
-            <div className="card-header py-1" style={{ backgroundColor: '#f8f9fa' }}>
-              <h6 className="mb-0" style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>
-                Diagnóstico
-              </h6>
-            </div>
-            <div className="card-body py-1">
-              <p className="card-text small mb-0" style={{ fontSize: '0.7rem', color: '#6c757d' }}>
-                {recordData.last_diagnoses || 'Inserir informação'}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 

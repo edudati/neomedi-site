@@ -22,6 +22,7 @@ const WorkspaceRecords = () => {
   const [loading, setLoading] = useState(false);
   const [patientId, setPatientId] = useState<string>("");
   const [hasRecord, setHasRecord] = useState(false);
+  const [visitsCount, setVisitsCount] = useState(0);
 
   const startResizing = () => setIsResizing(true);
 
@@ -131,6 +132,7 @@ const WorkspaceRecords = () => {
                 onRefresh={setRefreshRecords}
                 onAddRecord={() => setShowCreateForm(true)}
                 onRecordStatusChange={setHasRecord}
+                visitsCount={visitsCount}
               />
             </div>
             <div className={styles.centerPaneContent}>
@@ -140,6 +142,7 @@ const WorkspaceRecords = () => {
                   setRefreshVisits(() => refreshFn);
                 }}
                 hasRecord={hasRecord}
+                onVisitsCountChange={setVisitsCount}
               />
             </div>
           </>

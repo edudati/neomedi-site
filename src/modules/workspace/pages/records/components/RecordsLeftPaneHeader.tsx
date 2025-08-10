@@ -36,7 +36,43 @@ const RecordsLeftPaneHeader = ({ onAddRecord, onAddVisit, hasRecord }: RecordsLe
       </div>
 
       {/* Botões Adicionar */}
-      <div style={{ padding: '0.5rem 1rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+      <div style={{ 
+          padding: '0.75rem 1rem', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          gap: '0.5rem',
+          borderBottom: '1px solid #e0e0e0'
+        }}>
+        <button
+          className="btn btn-link"
+          title="Adicionar Exame"
+          aria-label="Adicionar novo exame"
+          style={{ 
+            color: hasRecord ? '#dc3545' : '#6c757d',
+            padding: '0.5rem',
+            opacity: hasRecord ? 1 : 0.5,
+            cursor: hasRecord ? 'pointer' : 'not-allowed',
+            flex: 1
+          }}
+          disabled={!hasRecord}
+        >
+          <i className="bi bi-heart-pulse-fill fs-4"></i>
+        </button>
+        <button
+          className="btn btn-link"
+          title="Adicionar Acompanhamento"
+          aria-label="Adicionar novo acompanhamento"
+          style={{ 
+            color: hasRecord ? '#fd7e14' : '#6c757d',
+            padding: '0.5rem',
+            opacity: hasRecord ? 1 : 0.5,
+            cursor: hasRecord ? 'pointer' : 'not-allowed',
+            flex: 1
+          }}
+          disabled={!hasRecord}
+        >
+          <i className="bi bi-stopwatch-fill fs-4"></i>
+        </button>
         {onAddVisit && (
           <button
             onClick={onAddVisit}
@@ -47,7 +83,8 @@ const RecordsLeftPaneHeader = ({ onAddRecord, onAddVisit, hasRecord }: RecordsLe
               color: hasRecord ? '#198754' : '#6c757d',
               padding: '0.5rem',
               opacity: hasRecord ? 1 : 0.5,
-              cursor: hasRecord ? 'pointer' : 'not-allowed'
+              cursor: hasRecord ? 'pointer' : 'not-allowed',
+              flex: 1
             }}
             disabled={!hasRecord}
           >

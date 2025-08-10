@@ -2,13 +2,15 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { visitService } from "../services/visitService";
 import type { Visit } from "../services/visitService";
+import styles from "./VisitsList.module.css";
 
 interface VisitsListProps {
   onRefresh?: (refreshFn: () => void) => void;
   hasRecord?: boolean;
+  onVisitsCountChange?: (count: number) => void;
 }
 
-const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
+const VisitsList = ({ onRefresh, hasRecord, onVisitsCountChange }: VisitsListProps) => {
   const { id: patientId } = useParams();
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,11 +21,12 @@ const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
 
     try {
       setLoading(true);
-      setError(null); // Limpar erros anteriores
+      setError(null);
       console.log('🔄 VisitsList: Buscando visitas para patientId:', patientId);
       
       const response = await visitService.getVisitsByPatient(patientId);
       setVisits(response);
+      onVisitsCountChange?.(response.length);
       console.log('📋 VisitsList: Visitas encontradas:', response.length);
     } catch (err: any) {
       if (err.response?.status === 404) {
@@ -58,10 +61,6 @@ const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
     });
   };
 
-  if (!hasRecord) {
-    return null;
-  }
-
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100px' }}>
@@ -81,6 +80,10 @@ const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
     );
   }
 
+  if (!hasRecord) {
+    return null;
+  }
+
   if (visits.length === 0) {
     return (
       <div className="text-center m-3">
@@ -92,74 +95,61 @@ const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
   }
 
   return (
-    <div className="visits-list" style={{ width: '100%' }}>
-      <div className="d-flex justify-content-between align-items-center mb-2">
-        <h6 className="mb-0" style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
-          Histórico de Atendimentos ({visits.length})
-        </h6>
-      </div>
-      
+    <div className="visits-list" style={{ textAlign: 'left' }}>
+
       <div className="visits-container">
-        {visits.map((visit, index) => (
-          <div key={visit.id} className="card border-0 shadow-sm mb-2" style={{ fontSize: '0.7rem' }}>
-            <div className="card-header py-1" style={{ backgroundColor: '#e3f2fd' }}>
-              <div className="d-flex justify-content-between align-items-center">
-                <h6 className="mb-0" style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>
-                  Atendimento #{visits.length - index}
-                </h6>
-                <small className="text-muted">{formatDate(visit.created_at)}</small>
+        {visits.map((visit) => (
+          <div key={visit.id} className={styles.visitItem} style={{ fontSize: '0.7rem' }}>
+            <i className={`bi bi-calendar3 ${styles.calendarIcon}`}></i>
+            <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '0.85rem' }}>{formatDate(visit.created_at)}</div>
+            <div className={styles.visitContent}>
+              <div className={styles.visitSection}>
+                <div className={styles.visitTitle}>Queixa Principal</div>
+                <div className={styles.visitText}>
+                  {visit.main_complaint || 'Não informado'}
+                </div>
               </div>
-            </div>
-            <div className="card-body py-2">
-              <div className="row g-2">
-                <div className="col-12">
-                  <strong>Queixa Principal:</strong>
-                  <p className="mb-1" style={{ fontSize: '0.65rem', color: '#495057' }}>
-                    {visit.main_complaint || 'Não informado'}
-                  </p>
+              
+              <div className={styles.visitSection}>
+                <div className={styles.visitTitle}>História da Doença Atual</div>
+                <div className={styles.visitText}>
+                  {visit.current_illness_history || 'Não informado'}
                 </div>
-                
-                <div className="col-12">
-                  <strong>História da Doença Atual:</strong>
-                  <p className="mb-1" style={{ fontSize: '0.65rem', color: '#495057' }}>
-                    {visit.current_illness_history || 'Não informado'}
-                  </p>
-                </div>
-                
-                <div className="col-12">
-                  <strong>Exame Físico:</strong>
-                  <p className="mb-1" style={{ fontSize: '0.65rem', color: '#495057' }}>
-                    {visit.physical_exam || 'Não informado'}
-                  </p>
-                </div>
-                
-                {visit.diagnostic_hypothesis && (
-                  <div className="col-12">
-                    <strong>Hipótese Diagnóstica:</strong>
-                    <p className="mb-1" style={{ fontSize: '0.65rem', color: '#495057' }}>
-                      {visit.diagnostic_hypothesis}
-                    </p>
-                  </div>
-                )}
-                
-                {visit.prescription && (
-                  <div className="col-12">
-                    <strong>Prescrição:</strong>
-                    <p className="mb-1" style={{ fontSize: '0.65rem', color: '#495057' }}>
-                      {visit.prescription}
-                    </p>
-                  </div>
-                )}
-                
-                {visit.procedures && (
-                  <div className="col-12">
-                    <strong>Procedimentos:</strong>
-                    <p className="mb-1" style={{ fontSize: '0.65rem', color: '#495057' }}>
-                      {visit.procedures}
-                    </p>
-                  </div>
-                )}
               </div>
+              
+              <div className={styles.visitSection}>
+                <div className={styles.visitTitle}>Exame Físico</div>
+                <div className={styles.visitText}>
+                  {visit.physical_exam || 'Não informado'}
+                </div>
+              </div>
+              
+              {visit.diagnostic_hypothesis && (
+                <div className={styles.visitSection}>
+                  <div className={styles.visitTitle}>Hipótese Diagnóstica</div>
+                  <div className={styles.visitText}>
+                    {visit.diagnostic_hypothesis}
+                  </div>
+                </div>
+              )}
+              
+              {visit.prescription && (
+                <div className={styles.visitSection}>
+                  <div className={styles.visitTitle}>Prescrição</div>
+                  <div className={styles.visitText}>
+                    {visit.prescription}
+                  </div>
+                </div>
+              )}
+              
+              {visit.procedures && (
+                <div className={styles.visitSection}>
+                  <div className={styles.visitTitle}>Procedimentos</div>
+                  <div className={styles.visitText}>
+                    {visit.procedures}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -168,4 +158,4 @@ const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
   );
 };
 
-export default VisitsList; 
+export default VisitsList;

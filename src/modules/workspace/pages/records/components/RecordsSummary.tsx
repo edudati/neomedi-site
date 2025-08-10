@@ -55,6 +55,16 @@ const RecordsSummary = () => {
 
   return (
     <div className={styles.patientDetails} style={{ textAlign: 'left' }}>
+      {/* Diagnóstico sempre visível */}
+      <div className="mb-4">
+        <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+          Diagnóstico
+        </div>
+        <div style={{ color: '#495057' }}>
+          {recordData.last_diagnoses || 'Não informado'}
+        </div>
+      </div>
+
       {/* Acordeões individuais para cada campo do record */}
       <details className="mb-2">
         <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>

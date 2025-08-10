@@ -97,14 +97,6 @@ const PatientHeader = () => {
                 }
               </small>
             </div>
-            
-            {/* Gênero */}
-            <div className="d-flex align-items-center">
-              <i className={`bi ${getGenderIcon(clientData?.user?.gender)} me-1`} style={{ color: '#6c757d' }}></i>
-              <small style={{ color: '#6c757d' }}>
-                {clientData?.user?.gender || 'N/A'}
-              </small>
-            </div>
           </div>
         </div>
         
