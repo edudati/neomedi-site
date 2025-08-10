@@ -78,6 +78,8 @@
   transition: border-color 0.2s, box-shadow 0.2s;
   font-family: inherit;
   resize: vertical;
+  background-color: white;
+  color: #1a202c;
 }
 
 .field input:focus,

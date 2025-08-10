@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import UserDropdown from "../../../components/UserDropdown"; 
 import PatientButton from "../../../components/PatientButton";
 import RecordsButton from "../../../components/RecordsButton";
-import RecordsPatientDetails from "./RecordsPatientDetails";
+import PatientHeader from "./PatientHeader";
+import RecordsSummary from "./RecordsSummary";
 import styles from "../index.module.css";
 
 interface RecordsLeftPaneHeaderProps {
@@ -36,23 +37,19 @@ const RecordsLeftPaneHeader = ({ onAddRecord, onAddVisit, hasRecord }: RecordsLe
 
       {/* Botões Adicionar */}
       <div style={{ padding: '0.5rem 1rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-        <button
-          onClick={onAddRecord}
-          className="btn btn-link"
-          title="Adicionar Prontuário"
-          aria-label="Adicionar novo prontuário"
-          style={{ color: '#0d6efd', padding: '0.5rem' }}
-        >
-          <i className="bi bi-file-earmark-plus-fill fs-4"></i>
-        </button>
-        
-        {hasRecord && onAddVisit && (
+        {onAddVisit && (
           <button
             onClick={onAddVisit}
             className="btn btn-link"
             title="Adicionar Atendimento"
             aria-label="Adicionar novo atendimento"
-            style={{ color: '#198754', padding: '0.5rem' }}
+            style={{ 
+              color: hasRecord ? '#198754' : '#6c757d',
+              padding: '0.5rem',
+              opacity: hasRecord ? 1 : 0.5,
+              cursor: hasRecord ? 'pointer' : 'not-allowed'
+            }}
+            disabled={!hasRecord}
           >
             <i className="bi bi-calendar-plus-fill fs-4"></i>
           </button>
@@ -60,7 +57,8 @@ const RecordsLeftPaneHeader = ({ onAddRecord, onAddVisit, hasRecord }: RecordsLe
       </div>
 
       {/* Detalhes do paciente abaixo do header */}
-      <RecordsPatientDetails />
+      <PatientHeader />
+      {hasRecord && <RecordsSummary />}
     </div>
   );
 };

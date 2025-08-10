@@ -21,9 +21,11 @@ interface RecordData {
 
 interface CenterPaneHeaderProps {
   onRefresh?: (refreshFn: () => void) => void;
+  onAddRecord?: () => void;
+  onRecordStatusChange?: (hasRecord: boolean) => void;
 }
 
-const CenterPaneHeader = ({ onRefresh }: CenterPaneHeaderProps) => {
+const CenterPaneHeader = ({ onRefresh, onAddRecord, onRecordStatusChange }: CenterPaneHeaderProps) => {
   const { id: patientId } = useParams();
   const [recordData, setRecordData] = useState<RecordData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,9 +39,15 @@ const CenterPaneHeader = ({ onRefresh }: CenterPaneHeaderProps) => {
       console.log('🔍 Buscando record para patient_id:', patientId);
       const response = await api.get(`/records/patient/${patientId}`);
       setRecordData(response.data);
+      onRecordStatusChange?.(true);
       console.log('📋 Record do paciente:', response.data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar prontuário');
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        setRecordData(null);
+        onRecordStatusChange?.(false);
+      } else {
+        setError(err instanceof Error ? err.message : 'Erro ao carregar prontuário');
+      }
       console.error('Erro ao buscar record:', err);
     } finally {
       setLoading(false);
@@ -79,8 +87,14 @@ const CenterPaneHeader = ({ onRefresh }: CenterPaneHeaderProps) => {
     return (
       <div className="text-center m-4">
         <i className="bi bi-file-earmark-text text-muted" style={{ fontSize: '3rem' }}></i>
-        <h5 className="text-muted mt-3">Nenhum prontuário encontrado</h5>
-        <p className="text-muted">Este paciente ainda não possui prontuário.</p>
+        <h5 className="text-muted mt-3">Paciente sem prontuário</h5>
+        <button 
+          className="btn btn-primary mt-2" 
+          style={{ fontSize: '0.875rem' }}
+          onClick={onAddRecord}
+        >
+          Iniciar prontuário
+        </button>
       </div>
     );
   }

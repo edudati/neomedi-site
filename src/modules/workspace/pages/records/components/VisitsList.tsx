@@ -5,9 +5,10 @@ import type { Visit } from "../services/visitService";
 
 interface VisitsListProps {
   onRefresh?: (refreshFn: () => void) => void;
+  hasRecord?: boolean;
 }
 
-const VisitsList = ({ onRefresh }: VisitsListProps) => {
+const VisitsList = ({ onRefresh, hasRecord }: VisitsListProps) => {
   const { id: patientId } = useParams();
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,8 +25,12 @@ const VisitsList = ({ onRefresh }: VisitsListProps) => {
       const response = await visitService.getVisitsByPatient(patientId);
       setVisits(response);
       console.log('📋 VisitsList: Visitas encontradas:', response.length);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar visitas');
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        setVisits([]);
+      } else {
+        setError(err instanceof Error ? err.message : 'Erro ao carregar visitas');
+      }
       console.error('❌ VisitsList: Erro ao buscar visitas:', err);
     } finally {
       setLoading(false);
@@ -52,6 +57,10 @@ const VisitsList = ({ onRefresh }: VisitsListProps) => {
       minute: '2-digit'
     });
   };
+
+  if (!hasRecord) {
+    return null;
+  }
 
   if (loading) {
     return (
@@ -83,14 +92,14 @@ const VisitsList = ({ onRefresh }: VisitsListProps) => {
   }
 
   return (
-    <div className="visits-list">
+    <div className="visits-list" style={{ width: '100%' }}>
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h6 className="mb-0" style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
           Histórico de Atendimentos ({visits.length})
         </h6>
       </div>
       
-      <div className="visits-container" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+      <div className="visits-container">
         {visits.map((visit, index) => (
           <div key={visit.id} className="card border-0 shadow-sm mb-2" style={{ fontSize: '0.7rem' }}>
             <div className="card-header py-1" style={{ backgroundColor: '#e3f2fd' }}>

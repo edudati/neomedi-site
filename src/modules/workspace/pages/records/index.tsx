@@ -21,6 +21,7 @@ const WorkspaceRecords = () => {
   const [refreshVisits, setRefreshVisits] = useState<(() => void) | null>(null);
   const [loading, setLoading] = useState(false);
   const [patientId, setPatientId] = useState<string>("");
+  const [hasRecord, setHasRecord] = useState(false);
 
   const startResizing = () => setIsResizing(true);
 
@@ -107,7 +108,7 @@ const WorkspaceRecords = () => {
         <RecordsLeftPaneHeader 
           onAddRecord={() => setShowCreateForm(true)}
           onAddVisit={() => setShowVisitModal(true)}
-          hasRecord={!!id}
+          hasRecord={hasRecord}
         />
       </div>
 
@@ -125,12 +126,21 @@ const WorkspaceRecords = () => {
           />
                                ) : (
           <>
-            <CenterPaneHeader onRefresh={setRefreshRecords} />
-            <div className="mt-2">
-              <VisitsList onRefresh={(refreshFn) => {
-                console.log("🔗 Registrando função de refresh das visitas");
-                setRefreshVisits(() => refreshFn);
-              }} />
+            <div className={styles.centerPaneHeader}>
+              <CenterPaneHeader 
+                onRefresh={setRefreshRecords}
+                onAddRecord={() => setShowCreateForm(true)}
+                onRecordStatusChange={setHasRecord}
+              />
+            </div>
+            <div className={styles.centerPaneContent}>
+              <VisitsList 
+                onRefresh={(refreshFn) => {
+                  console.log("🔗 Registrando função de refresh das visitas");
+                  setRefreshVisits(() => refreshFn);
+                }}
+                hasRecord={hasRecord}
+              />
             </div>
           </>
         )}
